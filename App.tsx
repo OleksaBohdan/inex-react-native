@@ -5,7 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import MainTabs from './src/components/Tabs';
 import { StatusBar } from 'expo-status-bar';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 
 export default function App() {
   const colorScheme = useColorScheme();
