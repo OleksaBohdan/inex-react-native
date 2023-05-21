@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   textInput: {
-    backgroundColor: '#FAF9FE',
+    backgroundColor: '#FFFFFF',
     color: 'black',
   },
 });

@@ -22,10 +22,13 @@ export default function DatePicker() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.textExpenses}>-1560</Text>
       <Text style={styles.pickerText} onPress={showDatePicker}>
         {selectedDate ? selectedDate.toLocaleDateString() : 'No date selected'}
         <Icon name="arrow-drop-down" size={16} color={'#2A3356'} />
       </Text>
+
+      <Text style={styles.textIncomes}>+5320</Text>
 
       <DateTimePickerModal
         date={selectedDate}
@@ -42,11 +45,26 @@ export default function DatePicker() {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 13,
+  },
   pickerText: {
     fontSize: 16,
     fontWeight: '500',
     color: '#2A3356',
   },
   picker: {},
+  textExpenses: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#E80000',
+  },
+  textIncomes: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#22980F',
+  },
 });

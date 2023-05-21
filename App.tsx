@@ -6,6 +6,7 @@ import MainTabs from './src/components/Tabs';
 import { StatusBar } from 'expo-status-bar';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useColorScheme, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { theme } from './src/theme/theme';
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -15,7 +16,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <PaperProvider>
+      <PaperProvider theme={theme}>
         <NavigationContainer>
           <SafeAreaView edges={['top']} style={{ backgroundColor: '#ffffff' }}>
             <StatusBar style={colorScheme === 'dark' ? 'dark' : 'dark'} />

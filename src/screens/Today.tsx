@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import DatePicker from '../components/DatePicker';
+import Note from '../components/Note';
 import TransactionsList from '../components/TransactionsList';
 import MonthInfo from '../components/MonthInfo';
 import EnterValue from '../components/EnterValue';
 import Comment from '../components/Comment';
 import CreateTransactionBtn from '../components/CreateTransactionBtn';
+import { Divider } from 'react-native-paper';
 
 export default function Today() {
   return (
@@ -13,22 +15,17 @@ export default function Today() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
       keyboardVerticalOffset={60}
+      // onTouchStart={Keyboard.dismiss}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
-          <View style={styles.topContainer}>
-            <DatePicker />
-            <MonthInfo />
-            <TransactionsList />
-          </View>
+      <DatePicker />
+      {/* <Note /> */}
+      {/* <MonthInfo /> */}
 
-          <View style={styles.bottomContainer}>
-            <EnterValue />
-            <Comment />
-            <CreateTransactionBtn />
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+      <TransactionsList />
+
+      <EnterValue />
+      <Comment />
+      <CreateTransactionBtn />
     </KeyboardAvoidingView>
   );
 }
@@ -36,17 +33,10 @@ export default function Today() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    paddingVertical: 24,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'space-between',
-  },
-  topContainer: {
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-  },
-  bottomContainer: {
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 24,
   },
 });

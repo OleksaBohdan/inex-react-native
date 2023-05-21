@@ -6,7 +6,7 @@ export default function CreateTransactionBtn() {
   return (
     <View style={styles.container}>
       <Button mode="contained" onPress={() => console.log('Pressed')} style={styles.addBtn}>
-        Create transaction
+        <Text style={styles.textBtn}>Create transaction</Text>
       </Button>
     </View>
   );
@@ -14,9 +14,21 @@ export default function CreateTransactionBtn() {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     marginTop: 24,
+    marginBottom: 10,
   },
   addBtn: {
-    backgroundColor: '#F35B25',
+    width: '100%',
+    height: 56,
+    borderRadius: 100,
+    backgroundColor: '#0077B5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textBtn: {
+    fontSize: 16,
+    width: '100%',
+    // lineHeight: 56,
   },
 });

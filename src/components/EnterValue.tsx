@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Icon from '@expo/vector-icons/MaterialIcons';
 import { TextInput } from 'react-native-paper';
 import * as Haptics from 'expo-haptics';
+import { SegmentedButtons } from 'react-native-paper';
 
 export default function EnterValue() {
   const [text, setText] = useState('');
@@ -49,11 +50,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 13,
   },
   valueInput: {
     width: 155,
     height: 56,
-    backgroundColor: '#FAF9FE',
+    backgroundColor: '#FFFFFF',
     color: 'black',
   },
   expensesIcon: {
