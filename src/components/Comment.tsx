@@ -5,25 +5,19 @@ import { TextInput } from 'react-native-paper';
 export default function Comment() {
   return (
     <View style={styles.container}>
-      <TextInput
-        theme={{ dark: false }}
-        label="comment"
-        multiline
-        numberOfLines={4}
-        style={styles.textInput}
-        mode="outlined"
-      />
+      <TextInput label="Comment" style={styles.textInput} maxLength={20} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 24,
     width: '100%',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 15,
   },
   textInput: {
     backgroundColor: '#FFFFFF',
-    color: 'black',
+    borderBottomWidth: 1,
   },
 });

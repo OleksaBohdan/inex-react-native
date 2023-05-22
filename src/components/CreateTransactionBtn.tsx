@@ -5,7 +5,12 @@ import { Button } from 'react-native-paper';
 export default function CreateTransactionBtn() {
   return (
     <View style={styles.container}>
-      <Button mode="contained" onPress={() => console.log('Pressed')} style={styles.addBtn}>
+      <Button
+        mode="contained"
+        onPress={() => console.log('Pressed')}
+        contentStyle={styles.addBtn}
+        style={{ borderRadius: 100 }}
+      >
         <Text style={styles.textBtn}>Create transaction</Text>
       </Button>
     </View>
@@ -15,20 +20,18 @@ export default function CreateTransactionBtn() {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginTop: 24,
-    marginBottom: 10,
+    paddingVertical: 24,
+    paddingHorizontal: 15,
+    backgroundColor: '#FFFFFF',
   },
   addBtn: {
     width: '100%',
     height: 56,
-    borderRadius: 100,
     backgroundColor: '#0077B5',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   textBtn: {
     fontSize: 16,
-    width: '100%',
-    // lineHeight: 56,
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
 });

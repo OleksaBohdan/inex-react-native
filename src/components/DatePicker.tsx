@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from '@expo/vector-icons//MaterialIcons';
@@ -7,28 +7,30 @@ export default function DatePicker() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [datePickerVisible, setDatePickerVisible] = useState(false);
 
-  const showDatePicker = () => {
+  const showDatePicker = useCallback(() => {
     setDatePickerVisible(true);
-  };
+  }, []);
 
-  const hideDatePicker = () => {
+  const hideDatePicker = useCallback(() => {
     setDatePickerVisible(false);
-  };
+  }, []);
 
-  const handleConfirm = (date: Date) => {
-    setSelectedDate(date);
-    hideDatePicker();
-  };
+  const handleConfirm = useCallback(
+    (date: Date) => {
+      setSelectedDate(date);
+      hideDatePicker();
+    },
+    [hideDatePicker]
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.textExpenses}>-1560</Text>
+      <Text style={[styles.pickerText, styles.textExpenses]}>-1560</Text>
       <Text style={styles.pickerText} onPress={showDatePicker}>
-        {selectedDate ? selectedDate.toLocaleDateString() : 'No date selected'}
+        {selectedDate.toLocaleDateString()}
         <Icon name="arrow-drop-down" size={16} color={'#2A3356'} />
       </Text>
-
-      <Text style={styles.textIncomes}>+5320</Text>
+      <Text style={[styles.pickerText, styles.textIncomes]}>+5320</Text>
 
       <DateTimePickerModal
         date={selectedDate}
@@ -49,22 +51,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    paddingHorizontal: 13,
+    padding: 15,
+    backgroundColor: '#FFFFFF',
   },
   pickerText: {
     fontSize: 16,
     fontWeight: '500',
     color: '#2A3356',
   },
-  picker: {},
   textExpenses: {
-    fontSize: 16,
-    fontWeight: '500',
     color: '#E80000',
   },
   textIncomes: {
-    fontSize: 16,
-    fontWeight: '500',
     color: '#22980F',
   },
 });

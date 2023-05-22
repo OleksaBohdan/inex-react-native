@@ -7,6 +7,8 @@ import Report from '../screens/Report';
 import Category from '../screens/Category';
 import Settings from '../screens/Settings';
 
+import { TodayStackNavigator } from '../screens/Today';
+
 const Tab = createBottomTabNavigator();
 
 function MainTabs() {
@@ -34,9 +36,10 @@ function MainTabs() {
           return <Icon name={iconName} size={size} color={color} />;
         },
         headerShown: false,
+        tabBarActiveTintColor: 'black',
       })}
     >
-      <Tab.Screen name="Today" component={Today} />
+      <Tab.Screen name="Today" component={TodayStackNavigator} />
       <Tab.Screen name="Report" component={Report} />
       <Tab.Screen name="Category" component={Category} />
       <Tab.Screen name="Settings" component={Settings} />

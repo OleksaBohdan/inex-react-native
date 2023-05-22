@@ -1,44 +1,36 @@
-import { Keyboard, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import { Keyboard, StyleSheet, View, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback } from 'react';
 import Icon from '@expo/vector-icons/MaterialIcons';
 import { TextInput } from 'react-native-paper';
 import * as Haptics from 'expo-haptics';
-import { SegmentedButtons } from 'react-native-paper';
 
 export default function EnterValue() {
   const [text, setText] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('none');
 
-  const getIconName = (iconType) => {
-    if (selectedIcon === iconType) {
-      return iconType === 'expenses' ? 'remove-circle' : 'add-circle';
-    }
-    return iconType === 'expenses' ? 'remove-circle-outline' : 'add-circle-outline';
-  };
+  const handlePress = useCallback((iconType) => {
+    setSelectedIcon(iconType);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  }, []);
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedIcon('expenses'), Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        }}
-      >
-        <Icon name={getIconName('expenses')} style={styles.expensesIcon} />
+      <TouchableOpacity onPress={() => handlePress('expenses')}>
+        <Icon
+          style={styles.expensesIcon}
+          name={selectedIcon === 'expenses' ? 'remove-circle' : 'remove-circle-outline'}
+        />
       </TouchableOpacity>
       <TextInput
-        mode="outlined"
-        label="total"
-        placeholder=""
+        label="Total"
         style={styles.valueInput}
         keyboardType="numeric"
+        maxLength={10}
         onBlur={() => Keyboard.dismiss()}
+        mode="outlined"
       />
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedIcon('incomes'), Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        }}
-      >
-        <Icon name={getIconName('incomes')} style={styles.incomesIcon} />
+      <TouchableOpacity onPress={() => handlePress('incomes')}>
+        <Icon style={styles.incomesIcon} name={selectedIcon === 'incomes' ? 'add-circle' : 'add-circle-outline'} />
       </TouchableOpacity>
     </View>
   );
@@ -50,13 +42,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 13,
+    paddingHorizontal: 15,
+    paddingVertical: 24,
+    marginTop: 8,
+    backgroundColor: '#FFFFFF',
   },
   valueInput: {
     width: 155,
-    height: 56,
     backgroundColor: '#FFFFFF',
-    color: 'black',
   },
   expensesIcon: {
     fontSize: 48,
