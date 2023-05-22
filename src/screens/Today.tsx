@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { Modal, StyleSheet, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+
 import DatePicker from '../components/DatePicker';
 import TransactionsList from '../components/TransactionsList';
 import EnterValue from '../components/EnterValue';
 import Comment from '../components/Comment';
 import CreateTransactionBtn from '../components/CreateTransactionBtn';
-import { createStackNavigator } from '@react-navigation/stack';
+import ChooseCategory from '../components/ChooseCategory';
 
 import TransactionCardScreen from './TransactionCardScreen';
 
@@ -21,6 +23,8 @@ export function TodayStackNavigator() {
 }
 
 export default function Today({ navigation }) {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -32,7 +36,10 @@ export default function Today({ navigation }) {
       <TransactionsList navigation={navigation} />
       <EnterValue />
       <Comment />
-      <CreateTransactionBtn />
+      <CreateTransactionBtn showModal={() => setModalVisible(true)} />
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <ChooseCategory closeModal={() => setModalVisible(false)} />
+      </Modal>
     </KeyboardAvoidingView>
   );
 }

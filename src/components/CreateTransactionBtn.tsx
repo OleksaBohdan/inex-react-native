@@ -2,15 +2,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Button } from 'react-native-paper';
 
-export default function CreateTransactionBtn() {
+export default function CreateTransactionBtn({ showModal }) {
   return (
     <View style={styles.container}>
-      <Button
-        mode="contained"
-        onPress={() => console.log('Pressed')}
-        contentStyle={styles.addBtn}
-        style={{ borderRadius: 100 }}
-      >
+      <Button mode="contained" onPress={showModal} contentStyle={styles.addBtn} style={{ borderRadius: 100 }}>
         <Text style={styles.textBtn}>Create transaction</Text>
       </Button>
     </View>
