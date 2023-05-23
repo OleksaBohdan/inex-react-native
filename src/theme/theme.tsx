@@ -10,6 +10,7 @@ export const theme = {
     text: 'black', // change text color
     disabled: 'gray', // change disabled color
     placeholder: 'gray', // change placeholder color
-    backdrop: 'transparent', // change backdrop color
+    notification: 'red',
+    backdrop: 'red',
   },
 };

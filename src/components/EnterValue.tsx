@@ -49,14 +49,16 @@ const styles = StyleSheet.create({
   },
   valueInput: {
     width: 155,
+    height: 56,
     backgroundColor: '#FFFFFF',
+    fontSize: 24,
   },
   expensesIcon: {
-    fontSize: 48,
-    color: '#E80000',
+    fontSize: 56,
+    color: '#2E76B0',
   },
   incomesIcon: {
-    fontSize: 48,
-    color: '#22980F',
+    fontSize: 56,
+    color: '#2E76B0',
   },
 });

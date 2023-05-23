@@ -5,8 +5,6 @@ import Icon from '@expo/vector-icons/MaterialIcons';
 import CategoryCard from './CategoryCard';
 
 export default function ChooseCategory({ closeModal }) {
-  // const screenHeight = Dimensions.get('window').height;
-
   return (
     <SafeAreaView style={styles.modalBackgroundStyle}>
       <View style={[styles.content, { height: '65%' }]}>
@@ -31,6 +29,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   content: {
     backgroundColor: '#FFFFFF',

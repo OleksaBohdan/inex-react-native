@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import Icon from '@expo/vector-icons/MaterialIcons';
 
 export default function CategoryCard() {
   return (
     <View style={[styles.card]}>
-      <Text style={styles.categotyText}> Category Card</Text>
+      <Text style={styles.cardNameText}> Category Name</Text>
+      <Icon name="delete" size={16} />
     </View>
   );
 }
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderWidth: 1,
   },
-  categotyText: {
+  cardNameText: {
     fontSize: 16,
     fontWeight: '500',
   },

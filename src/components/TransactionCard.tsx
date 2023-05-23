@@ -24,12 +24,16 @@ const styles = StyleSheet.create({
     height: 53,
     flexDirection: 'row',
     paddingVertical: 0,
+    paddingHorizontal: 13,
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderWidth: 1,
+    marginVertical: 4,
   },
   commentText: {
     fontSize: 16,
     fontWeight: '500',
+    marginBottom: 4,
   },
   subtitleText: {
     fontSize: 10,

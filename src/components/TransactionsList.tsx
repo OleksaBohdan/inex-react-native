@@ -8,6 +8,8 @@ export default function TransactionsList({ navigation }) {
     <View style={styles.container}>
       <ScrollView>
         <TransactionCard onPress={() => navigation.navigate('TransactionCardScreen')} />
+        <TransactionCard onPress={() => navigation.navigate('TransactionCardScreen')} />
+        <TransactionCard onPress={() => navigation.navigate('TransactionCardScreen')} />
       </ScrollView>
     </View>
   );
@@ -20,5 +22,6 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 15,
+    paddingTop: 16,
   },
 });
