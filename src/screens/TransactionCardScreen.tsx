@@ -1,18 +1,25 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Keyboard } from 'react-native';
 import React from 'react';
+import { TextInput } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 export default function TransactionCardScreen() {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onTouchStart={Keyboard.dismiss}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Income</Text>
       </View>
       <View style={styles.mainContainer}>
         <View style={styles.valueContainer}>
-          <View style={styles.valueField}>
-            <Text style={styles.valueText}>1758</Text>
-          </View>
+          <TextInput
+            label="Total"
+            style={styles.valueInput}
+            keyboardType="numeric"
+            maxLength={10}
+            onBlur={() => Keyboard.dismiss()}
+            mode="outlined"
+            value="1758"
+          />
           <View>
             <Icon
               name="delete"
@@ -67,18 +74,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  valueField: {
+  valueInput: {
     width: '80%',
     height: 56,
-    borderWidth: 1,
-    borderColor: '#86888A',
-    borderRadius: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  valueText: {
-    fontSize: 36,
-    fontWeight: '500',
+    backgroundColor: '#FFFFFF',
+    fontSize: 24,
   },
   deleteIcon: {
     fontSize: 24,

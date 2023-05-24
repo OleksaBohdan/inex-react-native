@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from '@expo/vector-icons//MaterialIcons'; // Import the MaterialIcons component
+import Icon from '@expo/vector-icons//MaterialIcons';
 
 import Today from '../screens/Today';
 import Report from '../screens/Report';
@@ -25,7 +25,7 @@ function MainTabs() {
             case 'Report':
               iconName = focused ? 'bar-chart' : 'bar-chart';
               break;
-            case 'Category':
+            case 'Categories':
               iconName = focused ? 'list' : 'list';
               break;
             case 'Settings':
@@ -41,7 +41,7 @@ function MainTabs() {
     >
       <Tab.Screen name="Today" component={TodayStackNavigator} />
       <Tab.Screen name="Report" component={Report} />
-      <Tab.Screen name="Category" component={Category} />
+      <Tab.Screen name="Categories" component={Category} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );

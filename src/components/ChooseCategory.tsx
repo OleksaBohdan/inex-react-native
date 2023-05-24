@@ -14,22 +14,29 @@ export default function ChooseCategory({ closeModal }) {
         </View>
         <Text style={styles.subHeaderText}>Costs</Text>
         <ScrollView>
-          <CategoryCard />
-          <CategoryCard />
-          <CategoryCard />
-          <CategoryCard />
+          <ChooseCategoryCard />
+          <ChooseCategoryCard />
+          <ChooseCategoryCard />
+          <ChooseCategoryCard />
         </ScrollView>
       </View>
     </SafeAreaView>
   );
 }
 
+const ChooseCategoryCard = () => {
+  return (
+    <View style={[styles.card]}>
+      <Text style={styles.cardNameText}> Category Name</Text>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   modalBackgroundStyle: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   content: {
     backgroundColor: '#FFFFFF',
@@ -52,5 +59,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
     marginBottom: 24,
+  },
+
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderColor: '#D9D9D9',
+    height: 53,
+    flexDirection: 'row',
+    marginVertical: 4,
+    paddingHorizontal: 13,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+  },
+  cardNameText: {
+    fontSize: 16,
+    fontWeight: '500',
   },
 });

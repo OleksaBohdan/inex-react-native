@@ -1,15 +1,38 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import React from 'react';
+import { StyleSheet, View, ScrollView, Keyboard } from 'react-native';
+import React, { useState, useEffect } from 'react';
 
 import TransactionCard from './TransactionCard';
 
 export default function TransactionsList({ navigation }) {
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const handlePress = () => {
+    Keyboard.dismiss();
+    if (!isKeyboardVisible) {
+      navigation.navigate('TransactionCardScreen');
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onTouchStart={Keyboard.dismiss}>
       <ScrollView>
-        <TransactionCard onPress={() => navigation.navigate('TransactionCardScreen')} />
-        <TransactionCard onPress={() => navigation.navigate('TransactionCardScreen')} />
-        <TransactionCard onPress={() => navigation.navigate('TransactionCardScreen')} />
+        <TransactionCard onPress={handlePress} />
+        <TransactionCard onPress={handlePress} />
+        <TransactionCard onPress={handlePress} />
       </ScrollView>
     </View>
   );

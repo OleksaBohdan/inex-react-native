@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { SegmentedButtons } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
@@ -10,7 +10,7 @@ export default function Category() {
   const [value, setValue] = React.useState('');
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onTouchStart={Keyboard.dismiss}>
       <View style={styles.headerContainer}>
         <Text style={styles.textHeader}>Categories</Text>
       </View>
