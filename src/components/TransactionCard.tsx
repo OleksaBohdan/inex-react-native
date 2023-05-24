@@ -1,7 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createStackNavigator, StackScreenProps, StackNavigationProp } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
 
 export default function TransactionCard({ onPress }) {

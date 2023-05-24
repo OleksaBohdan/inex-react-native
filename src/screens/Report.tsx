@@ -78,8 +78,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
-  // divider: {
-  //   width: '100%',
-  //   height: 20,
-  // },
 });

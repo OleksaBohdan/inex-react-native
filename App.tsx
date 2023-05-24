@@ -7,6 +7,13 @@ import { StatusBar } from 'expo-status-bar';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useColorScheme, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { theme } from './src/theme/theme';
+import { configureStore } from '@reduxjs/toolkit';
+import { mainSlice } from './src/state/mainState';
+import { Provider } from 'react-redux';
+
+const store = configureStore({
+  reducer: mainSlice.reducer,
+});
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -15,15 +22,17 @@ export default function App() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <PaperProvider theme={theme}>
-        <NavigationContainer>
-          <SafeAreaView edges={['top']} style={{ backgroundColor: '#ffffff' }}>
-            <StatusBar style={colorScheme === 'dark' ? 'dark' : 'dark'} />
-          </SafeAreaView>
-          <MainTabs />
-        </NavigationContainer>
-      </PaperProvider>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <PaperProvider theme={theme}>
+          <NavigationContainer>
+            <SafeAreaView edges={['top']} style={{ backgroundColor: '#FFFFFF' }}>
+              <StatusBar style={colorScheme === 'dark' ? 'dark' : 'dark'} />
+            </SafeAreaView>
+            <MainTabs />
+          </NavigationContainer>
+        </PaperProvider>
+      </SafeAreaProvider>
+    </Provider>
   );
 }

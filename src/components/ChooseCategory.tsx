@@ -2,8 +2,6 @@ import { StyleSheet, View, Text, Button, Dimensions, SafeAreaView, ScrollView } 
 import React from 'react';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
-import CategoryCard from './CategoryCard';
-
 export default function ChooseCategory({ closeModal }) {
   return (
     <SafeAreaView style={styles.modalBackgroundStyle}>

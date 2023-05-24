@@ -2,7 +2,6 @@ import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
-import Today from '../screens/Today';
 import Report from '../screens/Report';
 import Category from '../screens/Category';
 import Settings from '../screens/Settings';

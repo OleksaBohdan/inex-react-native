@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { SegmentedButtons } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 import CategoryCard from '../components/CategoryCard';
+import { createExpenseCategory } from '../repository/categories';
 
 export default function Category() {
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = useState('expenses');
+  const [category, setCategory] = useState('');
+  const [error, setError] = useState('');
+
+  const handleAddCategory = async () => {
+    if (category !== '') {
+      setError('');
+      if (value === 'expenses') {
+        try {
+          await createExpenseCategory(category);
+          setCategory('');
+        } catch (error) {
+          setError(error.message);
+        }
+      }
+    }
+  };
 
   return (
     <View style={styles.container} onTouchStart={Keyboard.dismiss}>
@@ -40,17 +57,23 @@ export default function Category() {
         ]}
       />
       <View>
-        <TextInput label="Category name" style={styles.textInput} maxLength={20} mode="outlined" />
+        <Text>{error}</Text>
+        <TextInput
+          label="Category name"
+          style={styles.textInput}
+          maxLength={20}
+          mode="outlined"
+          value={category}
+          onChangeText={setCategory}
+        />
+
         <View style={styles.addBtnContainer}>
-          <Icon style={styles.addBtn} name={'add-circle-outline'} />
+          <Icon style={styles.addBtn} name={'add-circle-outline'} onPress={handleAddCategory} />
         </View>
       </View>
 
       <ScrollView style={styles.categoryList}>
-        <CategoryCard />
-        <CategoryCard />
-        <CategoryCard />
-        <CategoryCard />
+        <CategoryCard name={'Name'} />
       </ScrollView>
     </View>
   );
