@@ -2,11 +2,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
-export default function CategoryCard({ name }) {
+export default function CategoryCard({ name, onDelete }) {
   return (
     <View style={[styles.card]}>
       <Text style={styles.cardNameText}> {name}</Text>
-      <Icon name="delete" size={16} />
+      {name !== 'Any' && <Icon name="delete" size={16} onPress={onDelete} />}
     </View>
   );
 }

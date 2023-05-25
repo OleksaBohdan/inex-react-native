@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
 import Report from '../screens/Report';
-import Category from '../screens/Category';
+import Categories from '../screens/Category';
 import Settings from '../screens/Settings';
 
 import { TodayStackNavigator } from '../screens/Today';
@@ -40,7 +40,7 @@ function MainTabs() {
     >
       <Tab.Screen name="Today" component={TodayStackNavigator} />
       <Tab.Screen name="Report" component={Report} />
-      <Tab.Screen name="Categories" component={Category} />
+      <Tab.Screen name="Categories" component={Categories} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );

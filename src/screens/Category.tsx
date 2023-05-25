@@ -1,30 +1,107 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { IMainState, setExpenseCategories, setIncomeCategories } from '../state/mainState';
 import { View, Text, StyleSheet, ScrollView, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { SegmentedButtons } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 import CategoryCard from '../components/CategoryCard';
-import { createExpenseCategory } from '../repository/categories';
+import {
+  createExpenseCategory,
+  getAllExpenseCategories,
+  deleteExpenseCategory,
+  createIncomeCategory,
+  getAllIncomeCategories,
+  deleteIncomeCategory,
+  Category,
+} from '../repository/categories';
 
-export default function Category() {
-  const [value, setValue] = useState('expenses');
+export default function Categories() {
+  const [choosenCategory, setChoosenCategory] = useState('expenses');
   const [category, setCategory] = useState('');
+  const expenseCategories = useSelector((state: IMainState) => state.expenseCategories);
+  const incomeCategories = useSelector((state: IMainState) => state.incomeCategories);
   const [error, setError] = useState('');
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (choosenCategory === 'expenses') {
+      showExpenseCategories();
+    } else if (choosenCategory === 'incomes') {
+      showIncomeCategories();
+    }
+  }, [choosenCategory]);
+
+  const showExpenseCategories = async () => {
+    if (choosenCategory === 'expenses') {
+      try {
+        let categories = await getAllExpenseCategories();
+
+        // Sort the categories by their range before dispatching
+        categories = categories.sort((a, b) => b.range - a.range);
+
+        dispatch(setExpenseCategories({ expenseCategories: categories }));
+      } catch (error) {
+        setError(error.message);
+      }
+    }
+  };
+
+  const showIncomeCategories = async () => {
+    try {
+      let categories = await getAllIncomeCategories();
+
+      // Sort the categories by their range before dispatching
+      categories = categories.sort((a, b) => b.range - a.range);
+
+      dispatch(setIncomeCategories({ incomeCategories: categories }));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   const handleAddCategory = async () => {
     if (category !== '') {
       setError('');
-      if (value === 'expenses') {
+      if (choosenCategory === 'expenses') {
         try {
           await createExpenseCategory(category);
-          setCategory('');
+          showExpenseCategories();
+        } catch (error) {
+          setError(error.message);
+        }
+      } else if (choosenCategory === 'incomes') {
+        try {
+          await createIncomeCategory(category);
+          showIncomeCategories();
         } catch (error) {
           setError(error.message);
         }
       }
+      setCategory('');
     }
   };
+
+  const handleDeleteCategory = async (categoryName: string) => {
+    if (choosenCategory === 'expenses') {
+      try {
+        await deleteExpenseCategory(categoryName);
+        showExpenseCategories();
+      } catch (error) {
+        setError(error.message);
+      }
+    } else if (choosenCategory === 'incomes') {
+      try {
+        await deleteIncomeCategory(categoryName);
+        showIncomeCategories();
+      } catch (error) {
+        setError(error.message);
+      }
+    }
+  };
+
+  const categoriesToDisplay = choosenCategory === 'expenses' ? expenseCategories : incomeCategories;
 
   return (
     <View style={styles.container} onTouchStart={Keyboard.dismiss}>
@@ -33,8 +110,8 @@ export default function Category() {
       </View>
 
       <SegmentedButtons
-        value={value}
-        onValueChange={setValue}
+        value={choosenCategory}
+        onValueChange={setChoosenCategory}
         style={styles.segmentedBtns}
         buttons={[
           {
@@ -42,7 +119,7 @@ export default function Category() {
             label: 'Exprenses',
             checkedColor: 'white',
             style: {
-              backgroundColor: value === 'expenses' ? '#2E76B0' : 'white',
+              backgroundColor: choosenCategory === 'expenses' ? '#2E76B0' : 'white',
             },
           },
 
@@ -51,13 +128,12 @@ export default function Category() {
             label: 'Incomes',
             checkedColor: 'white',
             style: {
-              backgroundColor: value === 'incomes' ? '#2E76B0' : 'white',
+              backgroundColor: choosenCategory === 'incomes' ? '#2E76B0' : 'white',
             },
           },
         ]}
       />
       <View>
-        <Text>{error}</Text>
         <TextInput
           label="Category name"
           style={styles.textInput}
@@ -66,6 +142,7 @@ export default function Category() {
           value={category}
           onChangeText={setCategory}
         />
+        <Text style={styles.errorText}>{error}</Text>
 
         <View style={styles.addBtnContainer}>
           <Icon style={styles.addBtn} name={'add-circle-outline'} onPress={handleAddCategory} />
@@ -73,7 +150,9 @@ export default function Category() {
       </View>
 
       <ScrollView style={styles.categoryList}>
-        <CategoryCard name={'Name'} />
+        {categoriesToDisplay.map((category: Category, index: number) => (
+          <CategoryCard key={index} name={category.name} onDelete={() => handleDeleteCategory(category.name)} />
+        ))}
       </ScrollView>
     </View>
   );
@@ -114,4 +193,5 @@ const styles = StyleSheet.create({
     fontSize: 48,
     color: '#2E76B0',
   },
+  errorText: {},
 });
