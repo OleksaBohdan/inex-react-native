@@ -1,11 +1,14 @@
 import React, { useState, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { IMainState, setSelectedDate } from '../state/mainState';
 import { StyleSheet, Text, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
 export default function DatePicker() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const selectedDate = useSelector((state: IMainState) => state.selectedDate);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const dispatch = useDispatch();
 
   const showDatePicker = useCallback(() => {
     setDatePickerVisible(true);
@@ -17,7 +20,7 @@ export default function DatePicker() {
 
   const handleConfirm = useCallback(
     (date: Date) => {
-      setSelectedDate(date);
+      dispatch(setSelectedDate({ selectedDate: date }));
       hideDatePicker();
     },
     [hideDatePicker]

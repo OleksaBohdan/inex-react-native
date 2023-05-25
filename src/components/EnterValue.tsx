@@ -1,26 +1,36 @@
 import { Keyboard, StyleSheet, View, TouchableOpacity } from 'react-native';
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { IMainState, setSelectedTransactionType, setEnteredValue } from '../state/mainState';
 import Icon from '@expo/vector-icons/MaterialIcons';
 import { TextInput } from 'react-native-paper';
 import * as Haptics from 'expo-haptics';
 
-export default function EnterValue() {
-  const [text, setText] = useState('');
-  const [selectedIcon, setSelectedIcon] = useState('none');
+import { TransactionType } from '../repository/transactions';
 
-  const handlePress = useCallback((iconType) => {
-    setSelectedIcon(iconType);
+export default function EnterValue() {
+  const selectedTransactionType = useSelector((state: IMainState) => state.selectedTransactionType);
+  const enteredValue = useSelector((state: IMainState) => state.enteredValue);
+  const dispatch = useDispatch();
+
+  const handleChooseTransactionType = useCallback((type: TransactionType) => {
+    dispatch(setSelectedTransactionType({ selectedTransactionType: type }));
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   }, []);
 
+  const handleEnterValue = (value: string) => {
+    dispatch(setEnteredValue({ enteredValue: value }));
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => handlePress('expenses')}>
+      <TouchableOpacity onPress={() => handleChooseTransactionType('expenses')}>
         <Icon
           style={styles.expensesIcon}
-          name={selectedIcon === 'expenses' ? 'remove-circle' : 'remove-circle-outline'}
+          name={selectedTransactionType === 'expenses' ? 'remove-circle' : 'remove-circle-outline'}
         />
       </TouchableOpacity>
+
       <TextInput
         label="Total"
         style={styles.valueInput}
@@ -28,9 +38,15 @@ export default function EnterValue() {
         maxLength={10}
         onBlur={() => Keyboard.dismiss()}
         mode="outlined"
+        value={enteredValue}
+        onChangeText={handleEnterValue}
       />
-      <TouchableOpacity onPress={() => handlePress('incomes')}>
-        <Icon style={styles.incomesIcon} name={selectedIcon === 'incomes' ? 'add-circle' : 'add-circle-outline'} />
+
+      <TouchableOpacity onPress={() => handleChooseTransactionType('incomes')}>
+        <Icon
+          style={styles.incomesIcon}
+          name={selectedTransactionType === 'incomes' ? 'add-circle' : 'add-circle-outline'}
+        />
       </TouchableOpacity>
     </View>
   );

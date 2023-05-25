@@ -1,8 +1,18 @@
 import { StyleSheet, View, Text, Button, Dimensions, SafeAreaView, ScrollView } from 'react-native';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { IMainState } from '../state/mainState';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
+import { Transaction } from '../repository/transactions';
+import { Category } from '../repository/categories';
+
 export default function ChooseCategory({ closeModal }) {
+  const selectedDate = useSelector((state: IMainState) => state.selectedDate);
+  const selectedTransactionType = useSelector((state: IMainState) => state.selectedTransactionType);
+  const enteredValue = useSelector((state: IMainState) => state.enteredValue);
+  const enteredComment = useSelector((state: IMainState) => state.enteredComment);
+
   return (
     <SafeAreaView style={styles.modalBackgroundStyle}>
       <View style={[styles.content, { height: '65%' }]}>
@@ -12,9 +22,6 @@ export default function ChooseCategory({ closeModal }) {
         </View>
         <Text style={styles.subHeaderText}>Costs</Text>
         <ScrollView>
-          <ChooseCategoryCard />
-          <ChooseCategoryCard />
-          <ChooseCategoryCard />
           <ChooseCategoryCard />
         </ScrollView>
       </View>
@@ -58,7 +65,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginBottom: 24,
   },
-
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
