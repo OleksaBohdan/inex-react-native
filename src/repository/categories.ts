@@ -8,6 +8,16 @@ export type Category = {
 };
 
 export const createExpenseCategory = async (categoryName: string): Promise<void> => {
+  // const clearAll = async () => {
+  //   try {
+  //     await AsyncStorage.clear();
+  //   } catch (e) {
+  //     // clear error
+  //   }
+
+  //   console.log('Done.');
+  // };
+  // await clearAll();
   const currentCategoriesJson = await AsyncStorage.getItem('expenseCategories');
   let currentCategories: Category[];
 

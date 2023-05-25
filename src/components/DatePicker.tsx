@@ -1,14 +1,27 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IMainState, setSelectedDate } from '../state/mainState';
 import { StyleSheet, Text, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
+import {
+  getSumExpenseTransactionsOfCurrentMonth,
+  getSumIncomeTransactionsOfCurrentMonth,
+} from '../repository/transactions';
+
 export default function DatePicker() {
   const selectedDate = useSelector((state: IMainState) => state.selectedDate);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [expenseSum, setExpenseSum] = useState('');
+  const [incomeSum, setIncomeSum] = useState('');
+  const transactionCreated = useSelector((state: IMainState) => state.transactionCreated);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    showExpenseSum();
+    showIncomeSum();
+  }, [transactionCreated]);
 
   const showDatePicker = useCallback(() => {
     setDatePickerVisible(true);
@@ -26,14 +39,23 @@ export default function DatePicker() {
     [hideDatePicker]
   );
 
+  const showExpenseSum = async () => {
+    const sum = await getSumExpenseTransactionsOfCurrentMonth();
+    setExpenseSum(sum);
+  };
+  const showIncomeSum = async () => {
+    const sum = await getSumIncomeTransactionsOfCurrentMonth();
+    setIncomeSum(sum);
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={[styles.pickerText, styles.textExpenses]}>-1560</Text>
+      <Text style={[styles.pickerText, styles.textExpenses]}>-{expenseSum || '0'}</Text>
       <Text style={styles.pickerText} onPress={showDatePicker}>
         {selectedDate.slice(0, 10)}
         <Icon name="arrow-drop-down" size={16} color={'#2A3356'} />
       </Text>
-      <Text style={[styles.pickerText, styles.textIncomes]}>+5320</Text>
+      <Text style={[styles.pickerText, styles.textIncomes]}>{incomeSum || '0'}</Text>
 
       <DateTimePickerModal
         date={new Date(selectedDate)}

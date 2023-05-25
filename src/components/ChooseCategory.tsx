@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   IMainState,
@@ -7,7 +6,9 @@ import {
   setIncomeCategories,
   setEnteredValue,
   setEnteredComment,
+  toggleTransactionCreated,
 } from '../state/mainState';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 import { Transaction, createExpenseTransaction, createIncomeTransaction } from '../repository/transactions';
@@ -54,31 +55,32 @@ export default function ChooseCategory({ closeModal }) {
 
   const categoriesToDisplay = selectedTransactionType === 'expenses' ? expenseCategories : incomeCategories;
 
-  const handleChooseCategory = (category: Category) => {
+  const careateTransaction = async (category: Category) => {
     setChoosenCategory(category);
 
     const transaction: Transaction = {
       value: enteredValue,
       transactionType: selectedTransactionType,
-      category: choosenCategory,
+      category,
       comment: enteredComment,
       date: selectedDate,
     };
 
     if (selectedTransactionType === 'expenses') {
       try {
-        createExpenseTransaction(transaction);
+        await createExpenseTransaction(transaction);
       } catch (error) {
         setError(error);
       }
     } else if (selectedTransactionType === 'incomes') {
       try {
-        createIncomeTransaction(transaction);
+        await createIncomeTransaction(transaction);
       } catch (error) {
         setError(error);
       }
     }
 
+    dispatch(toggleTransactionCreated());
     dispatch(setEnteredValue({ enteredValue: '' }));
     dispatch(setEnteredComment({ enteredComment: '' }));
 
@@ -95,7 +97,7 @@ export default function ChooseCategory({ closeModal }) {
         <Text style={styles.subHeaderText}>Costs</Text>
         <ScrollView>
           {categoriesToDisplay.map((category: Category, index: number) => (
-            <ChooseCategoryCard key={index} name={category.name} onPress={() => handleChooseCategory(category)} />
+            <ChooseCategoryCard key={index} name={category.name} onPress={() => careateTransaction(category)} />
           ))}
         </ScrollView>
       </View>

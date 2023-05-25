@@ -1,12 +1,25 @@
-import { StyleSheet, View, ScrollView, Keyboard } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { IMainState } from '../state/mainState';
+import { StyleSheet, View, ScrollView, Keyboard, Text } from 'react-native';
 
+import { Transaction, getTransactionsByDay } from '../repository/transactions';
 import TransactionCard from './TransactionCard';
 
 export default function TransactionsList({ navigation }) {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const selectedDate = useSelector((state: IMainState) => state.selectedDate);
+  const transactionCreated = useSelector((state: IMainState) => state.transactionCreated);
+
+  const fetchTransactions = async () => {
+    const transactions = await getTransactionsByDay(selectedDate);
+    setTransactions(transactions);
+  };
 
   useEffect(() => {
+    fetchTransactions();
+
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardVisible(true);
     });
@@ -18,7 +31,7 @@ export default function TransactionsList({ navigation }) {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, []);
+  }, [selectedDate, transactionCreated]);
 
   const handlePress = () => {
     Keyboard.dismiss();
@@ -29,11 +42,24 @@ export default function TransactionsList({ navigation }) {
 
   return (
     <View style={styles.container} onTouchStart={Keyboard.dismiss}>
-      <ScrollView>
-        <TransactionCard onPress={handlePress} />
-        <TransactionCard onPress={handlePress} />
-        <TransactionCard onPress={handlePress} />
-      </ScrollView>
+      <View style={styles.container} onTouchStart={Keyboard.dismiss}>
+        {transactions.length > 0 ? (
+          <ScrollView>
+            {transactions.map((transaction, index) => (
+              <TransactionCard
+                key={index}
+                category={transaction.category.name}
+                comment={transaction.comment}
+                value={transaction.value}
+                transactionType={transaction.transactionType}
+                onPress={handlePress}
+              />
+            ))}
+          </ScrollView>
+        ) : (
+          <Text>No transactions for the selected day.</Text>
+        )}
+      </View>
     </View>
   );
 }
