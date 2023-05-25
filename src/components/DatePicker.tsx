@@ -20,7 +20,7 @@ export default function DatePicker() {
 
   const handleConfirm = useCallback(
     (date: Date) => {
-      dispatch(setSelectedDate({ selectedDate: date }));
+      dispatch(setSelectedDate({ selectedDate: date.toISOString() }));
       hideDatePicker();
     },
     [hideDatePicker]
@@ -30,13 +30,13 @@ export default function DatePicker() {
     <View style={styles.container}>
       <Text style={[styles.pickerText, styles.textExpenses]}>-1560</Text>
       <Text style={styles.pickerText} onPress={showDatePicker}>
-        {selectedDate.toLocaleDateString()}
+        {selectedDate.slice(0, 10)}
         <Icon name="arrow-drop-down" size={16} color={'#2A3356'} />
       </Text>
       <Text style={[styles.pickerText, styles.textIncomes]}>+5320</Text>
 
       <DateTimePickerModal
-        date={selectedDate}
+        date={new Date(selectedDate)}
         isVisible={datePickerVisible}
         mode="date"
         display="inline"

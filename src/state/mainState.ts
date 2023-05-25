@@ -8,7 +8,7 @@ export interface IMainState {
   selectedTransactionType: TransactionType;
   enteredValue: string;
   enteredComment: string;
-  selectedDate: Date;
+  selectedDate: string;
 }
 
 const initialState: IMainState = {
@@ -17,7 +17,7 @@ const initialState: IMainState = {
   selectedTransactionType: 'expenses',
   enteredValue: '',
   enteredComment: '',
-  selectedDate: new Date(),
+  selectedDate: new Date().toISOString(),
 };
 
 export const mainSlice = createSlice({
@@ -39,7 +39,7 @@ export const mainSlice = createSlice({
     setEnteredComment: (state, action: PayloadAction<{ enteredComment: string }>) => {
       state.enteredComment = action.payload.enteredComment;
     },
-    setSelectedDate: (state, action: PayloadAction<{ selectedDate: Date }>) => {
+    setSelectedDate: (state, action: PayloadAction<{ selectedDate: string }>) => {
       state.selectedDate = action.payload.selectedDate;
     },
   },
