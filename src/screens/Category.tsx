@@ -34,27 +34,21 @@ export default function Categories() {
   }, [choosenCategory]);
 
   const showExpenseCategories = async () => {
-    if (choosenCategory === 'expenses') {
-      try {
-        let categories = await getAllExpenseCategories();
-
-        // Sort the categories by their range before dispatching
-        categories = categories.sort((a, b) => b.range - a.range);
-
-        dispatch(setExpenseCategories({ expenseCategories: categories }));
-      } catch (error) {
-        setError(error.message);
-      }
+    try {
+      let categories = await getAllExpenseCategories();
+      // Sort the categories by their range before dispatching
+      categories = categories.sort((a, b) => b.range - a.range);
+      dispatch(setExpenseCategories({ expenseCategories: categories }));
+    } catch (error) {
+      setError(error.message);
     }
   };
 
   const showIncomeCategories = async () => {
     try {
       let categories = await getAllIncomeCategories();
-
       // Sort the categories by their range before dispatching
       categories = categories.sort((a, b) => b.range - a.range);
-
       dispatch(setIncomeCategories({ incomeCategories: categories }));
     } catch (error) {
       setError(error.message);

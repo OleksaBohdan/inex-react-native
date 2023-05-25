@@ -14,7 +14,13 @@ export default function Comment() {
 
   return (
     <View style={styles.container}>
-      <TextInput onChangeText={handleEnterComment} label="Comment" style={styles.textInput} maxLength={20} />
+      <TextInput
+        onChangeText={handleEnterComment}
+        value={enteredComment}
+        label="Comment"
+        style={styles.textInput}
+        maxLength={20}
+      />
     </View>
   );
 }

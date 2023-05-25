@@ -1,17 +1,89 @@
-import { StyleSheet, View, Text, Button, Dimensions, SafeAreaView, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { IMainState } from '../state/mainState';
+import {
+  IMainState,
+  setExpenseCategories,
+  setIncomeCategories,
+  setEnteredValue,
+  setEnteredComment,
+} from '../state/mainState';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
-import { Transaction } from '../repository/transactions';
-import { Category } from '../repository/categories';
+import { Transaction, createExpenseTransaction, createIncomeTransaction } from '../repository/transactions';
+import { Category, getAllExpenseCategories, getAllIncomeCategories } from '../repository/categories';
 
 export default function ChooseCategory({ closeModal }) {
+  const [choosenCategory, setChoosenCategory] = useState<Category>();
   const selectedDate = useSelector((state: IMainState) => state.selectedDate);
   const selectedTransactionType = useSelector((state: IMainState) => state.selectedTransactionType);
   const enteredValue = useSelector((state: IMainState) => state.enteredValue);
   const enteredComment = useSelector((state: IMainState) => state.enteredComment);
+  const expenseCategories = useSelector((state: IMainState) => state.expenseCategories);
+  const incomeCategories = useSelector((state: IMainState) => state.incomeCategories);
+  const [error, setError] = useState('');
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (selectedTransactionType === 'expenses') {
+      showExpenseCategories();
+    } else if (selectedTransactionType === 'incomes') {
+      showIncomeCategories();
+    }
+  }, [selectedTransactionType]);
+
+  const showExpenseCategories = async () => {
+    try {
+      let categories = await getAllExpenseCategories();
+      categories = categories.sort((a, b) => b.range - a.range);
+      dispatch(setExpenseCategories({ expenseCategories: categories }));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const showIncomeCategories = async () => {
+    try {
+      let categories = await getAllIncomeCategories();
+      categories = categories.sort((a, b) => b.range - a.range);
+      dispatch(setIncomeCategories({ incomeCategories: categories }));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const categoriesToDisplay = selectedTransactionType === 'expenses' ? expenseCategories : incomeCategories;
+
+  const handleChooseCategory = (category: Category) => {
+    setChoosenCategory(category);
+
+    const transaction: Transaction = {
+      value: enteredValue,
+      transactionType: selectedTransactionType,
+      category: choosenCategory,
+      comment: enteredComment,
+      date: selectedDate,
+    };
+
+    if (selectedTransactionType === 'expenses') {
+      try {
+        createExpenseTransaction(transaction);
+      } catch (error) {
+        setError(error);
+      }
+    } else if (selectedTransactionType === 'incomes') {
+      try {
+        createIncomeTransaction(transaction);
+      } catch (error) {
+        setError(error);
+      }
+    }
+
+    dispatch(setEnteredValue({ enteredValue: '' }));
+    dispatch(setEnteredComment({ enteredComment: '' }));
+
+    closeModal();
+  };
 
   return (
     <SafeAreaView style={styles.modalBackgroundStyle}>
@@ -22,18 +94,20 @@ export default function ChooseCategory({ closeModal }) {
         </View>
         <Text style={styles.subHeaderText}>Costs</Text>
         <ScrollView>
-          <ChooseCategoryCard />
+          {categoriesToDisplay.map((category: Category, index: number) => (
+            <ChooseCategoryCard key={index} name={category.name} onPress={() => handleChooseCategory(category)} />
+          ))}
         </ScrollView>
       </View>
     </SafeAreaView>
   );
 }
 
-const ChooseCategoryCard = () => {
+const ChooseCategoryCard = ({ name, onPress }) => {
   return (
-    <View style={[styles.card]}>
-      <Text style={styles.cardNameText}> Category Name</Text>
-    </View>
+    <TouchableOpacity onPress={onPress} style={[styles.card]}>
+      <Text style={styles.cardNameText}>{name}</Text>
+    </TouchableOpacity>
   );
 };
 
