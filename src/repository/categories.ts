@@ -5,6 +5,7 @@ const CATEGORY_LIMIT = 20;
 export type Category = {
   name: string;
   range: number;
+  total?: number;
 };
 
 export const createExpenseCategory = async (categoryName: string): Promise<void> => {

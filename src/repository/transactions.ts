@@ -143,9 +143,9 @@ export const getTransactionsOfCurrentMonth = async (): Promise<Transaction[]> =>
   }
 };
 
-export const getSumExpenseTransactionsOfCurrentMonth = async (): Promise<string> => {
+export const getSumExpenseTransactionsOfCurrentMonth = async (currentDate: Date): Promise<string> => {
   try {
-    const currentDate = new Date();
+    // const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
 
@@ -166,9 +166,9 @@ export const getSumExpenseTransactionsOfCurrentMonth = async (): Promise<string>
   }
 };
 
-export const getSumIncomeTransactionsOfCurrentMonth = async (): Promise<string> => {
+export const getSumIncomeTransactionsOfCurrentMonth = async (currentDate: Date): Promise<string> => {
   try {
-    const currentDate = new Date();
+    // const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
 
@@ -198,6 +198,58 @@ export const deleteTransactionById = async (id: string, transactionType: Transac
     transactions = transactions.filter((transaction) => transaction.id !== id);
 
     await AsyncStorage.setItem(transactionsKey, JSON.stringify(transactions));
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getMonthSumByExpenseCategory = async (
+  categoryName: string,
+  month: number,
+  year: number
+): Promise<number> => {
+  try {
+    const transactionsJson = await AsyncStorage.getItem('@expenseTransactions');
+    let transactions: Transaction[] = transactionsJson != null ? JSON.parse(transactionsJson) : [];
+
+    let currentMonthTransactions = transactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+      return (
+        transaction.category.name === categoryName &&
+        transactionDate.getMonth() === month &&
+        transactionDate.getFullYear() === year
+      );
+    });
+
+    let sum = currentMonthTransactions.reduce((total, transaction) => total + Number(transaction.value), 0);
+
+    return parseFloat(sum.toFixed(2));
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getMonthSumByIncomeCategory = async (
+  categoryName: string,
+  month: number,
+  year: number
+): Promise<number> => {
+  try {
+    const transactionsJson = await AsyncStorage.getItem('@incomeTransactions');
+    let transactions: Transaction[] = transactionsJson != null ? JSON.parse(transactionsJson) : [];
+
+    let currentMonthTransactions = transactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+      return (
+        transaction.category.name === categoryName &&
+        transactionDate.getMonth() === month &&
+        transactionDate.getFullYear() === year
+      );
+    });
+
+    let sum = currentMonthTransactions.reduce((total, transaction) => total + Number(transaction.value), 0);
+
+    return parseFloat(sum.toFixed(2));
   } catch (error) {
     throw new Error(error);
   }

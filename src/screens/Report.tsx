@@ -1,38 +1,131 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { IMainState, setExpenseCategories, setIncomeCategories } from '../state/mainState';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import Icon from '@expo/vector-icons//MaterialIcons';
+
+import {
+  getSumExpenseTransactionsOfCurrentMonth,
+  getSumIncomeTransactionsOfCurrentMonth,
+  getMonthSumByExpenseCategory,
+  getMonthSumByIncomeCategory,
+} from '../repository/transactions';
+import { getAllExpenseCategories, getAllIncomeCategories } from '../repository/categories';
 
 export default function Report() {
+  const [choosenDate, setChoosenDate] = useState(new Date());
+  const transactionCreated = useSelector((state: IMainState) => state.transactionCreated);
+  const [expenseSum, setExpenseSum] = useState('');
+  const [incomeSum, setIncomeSum] = useState('');
+  const expenseCategories = useSelector((state: IMainState) => state.expenseCategories);
+  const incomeCategories = useSelector((state: IMainState) => state.incomeCategories);
+  const [error, setError] = useState('');
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    showExpenseSum();
+    showIncomeSum();
+    showExpenseCategories(choosenDate);
+    showIncomeCategories(choosenDate);
+  }, [transactionCreated, choosenDate]);
+
+  const showExpenseSum = async () => {
+    const sum = await getSumExpenseTransactionsOfCurrentMonth(choosenDate);
+    setExpenseSum(sum);
+  };
+  const showIncomeSum = async () => {
+    const sum = await getSumIncomeTransactionsOfCurrentMonth(choosenDate);
+    setIncomeSum(sum);
+  };
+
+  const showExpenseCategories = async (date: Date) => {
+    try {
+      let categories = await getAllExpenseCategories();
+      const month = date.getMonth();
+      const year = date.getFullYear();
+      for (let category of categories) {
+        const total = await getMonthSumByExpenseCategory(category.name, month, year);
+        category.total = total;
+      }
+      // sort by 'total'
+      categories = categories.sort((a, b) => b.total - a.total);
+      dispatch(setExpenseCategories({ expenseCategories: categories }));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const showIncomeCategories = async (date: Date) => {
+    try {
+      let categories = await getAllIncomeCategories();
+      const month = date.getMonth();
+      const year = date.getFullYear();
+      for (let category of categories) {
+        const total = await getMonthSumByIncomeCategory(category.name, month, year);
+        category.total = total;
+      }
+      // sort by 'total'
+      categories = categories.sort((a, b) => b.total - a.total);
+      dispatch(setIncomeCategories({ incomeCategories: categories }));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const decrementMonth = () => {
+    setChoosenDate((prevState) => new Date(prevState.getFullYear(), prevState.getMonth() - 1));
+  };
+
+  const incrementMonth = () => {
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    setChoosenDate((prevState) => {
+      const prevMonth = prevState.getMonth();
+      const prevYear = prevState.getFullYear();
+      // Allow increment only if it's not the current month and year
+      if (prevYear < currentYear || (prevYear === currentYear && prevMonth < currentMonth)) {
+        return new Date(prevState.getFullYear(), prevState.getMonth() + 1);
+      }
+      return prevState;
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.textHeader}>May 2023</Text>
+        <Icon name="arrow-left" size={24} color={'#2A3356'} onPress={decrementMonth} />
+        <Text style={styles.textHeader}>
+          {choosenDate.getFullYear()}-{`0${choosenDate.getMonth() + 1}`.slice(-2)}
+        </Text>
+        <Icon name="arrow-right" size={24} color={'#2A3356'} onPress={incrementMonth} />
       </View>
 
       <ScrollView>
         <View style={styles.categoryHeader}>
           <Text style={styles.categoryHeaderText}>Month Incomes</Text>
-          <Text style={styles.categoryHeaderText}>+3052$</Text>
+          <Text style={styles.categoryHeaderText}>{incomeSum}</Text>
         </View>
-        <ReportCard />
-        <ReportCard />
-        <ReportCard />
+        {incomeCategories.map((category, index) => (
+          <ReportCard key={index} name={category.name} total={category.total} />
+        ))}
 
         <View style={styles.categoryHeader}>
           <Text style={styles.categoryHeaderText}>Month Expenses</Text>
-          <Text style={styles.categoryHeaderText}>-2321$</Text>
+          <Text style={styles.categoryHeaderText}>-{expenseSum}</Text>
         </View>
-        <ReportCard />
-        <ReportCard />
+        {expenseCategories.map((category, index) => (
+          <ReportCard key={index} name={category.name} total={`-${category.total}`} />
+        ))}
       </ScrollView>
     </View>
   );
 }
 
-const ReportCard = () => {
+const ReportCard = ({ name, total }) => {
   return (
     <View style={[styles.card]}>
-      <Text style={styles.cardNameText}> Category Name</Text>
-      <Text style={styles.cardNameText}>+8000</Text>
+      <Text style={styles.cardNameText}>{name}</Text>
+      <Text style={styles.cardNameText}>{total}</Text>
     </View>
   );
 };
@@ -46,7 +139,8 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   textHeader: {
     fontSize: 24,

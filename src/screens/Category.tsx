@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IMainState, setExpenseCategories, setIncomeCategories } from '../state/mainState';
+import { IMainState, setExpenseCategories, setIncomeCategories, toggleTransactionCreated } from '../state/mainState';
 import { View, Text, StyleSheet, ScrollView, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { SegmentedButtons } from 'react-native-paper';
@@ -16,6 +16,7 @@ import {
   deleteIncomeCategory,
   Category,
 } from '../repository/categories';
+import { getMonthSumByExpenseCategory, getMonthSumByIncomeCategory } from '../repository/transactions';
 
 export default function Categories() {
   const [choosenCategory, setChoosenCategory] = useState('expenses');
@@ -31,13 +32,21 @@ export default function Categories() {
     } else if (choosenCategory === 'incomes') {
       showIncomeCategories();
     }
+    dispatch(toggleTransactionCreated());
   }, [choosenCategory]);
 
   const showExpenseCategories = async () => {
     try {
       let categories = await getAllExpenseCategories();
-      // Sort the categories by their range before dispatching
-      categories = categories.sort((a, b) => b.range - a.range);
+      const currentDate = new Date();
+      const month = currentDate.getMonth();
+      const year = currentDate.getFullYear();
+      for (let category of categories) {
+        const total = await getMonthSumByExpenseCategory(category.name, month, year);
+        category.total = total;
+      }
+      // sort by 'total'
+      categories = categories.sort((a, b) => b.total - a.total);
       dispatch(setExpenseCategories({ expenseCategories: categories }));
     } catch (error) {
       setError(error.message);
@@ -47,8 +56,15 @@ export default function Categories() {
   const showIncomeCategories = async () => {
     try {
       let categories = await getAllIncomeCategories();
-      // Sort the categories by their range before dispatching
-      categories = categories.sort((a, b) => b.range - a.range);
+      const currentDate = new Date();
+      const month = currentDate.getMonth();
+      const year = currentDate.getFullYear();
+      for (let category of categories) {
+        const total = await getMonthSumByIncomeCategory(category.name, month, year);
+        category.total = total;
+      }
+      // sort by 'total'
+      categories = categories.sort((a, b) => b.total - a.total);
       dispatch(setIncomeCategories({ incomeCategories: categories }));
     } catch (error) {
       setError(error.message);
@@ -74,6 +90,7 @@ export default function Categories() {
         }
       }
       setCategory('');
+      dispatch(toggleTransactionCreated());
     }
   };
 
@@ -94,6 +111,7 @@ export default function Categories() {
         setError(error.message);
       }
     }
+    dispatch(toggleTransactionCreated());
   };
 
   const categoriesToDisplay = choosenCategory === 'expenses' ? expenseCategories : incomeCategories;

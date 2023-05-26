@@ -40,11 +40,11 @@ export default function DatePicker() {
   );
 
   const showExpenseSum = async () => {
-    const sum = await getSumExpenseTransactionsOfCurrentMonth();
+    const sum = await getSumExpenseTransactionsOfCurrentMonth(new Date());
     setExpenseSum(sum);
   };
   const showIncomeSum = async () => {
-    const sum = await getSumIncomeTransactionsOfCurrentMonth();
+    const sum = await getSumIncomeTransactionsOfCurrentMonth(new Date());
     setIncomeSum(sum);
   };
 
