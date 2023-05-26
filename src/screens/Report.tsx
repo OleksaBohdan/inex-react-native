@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IMainState, setExpenseCategories, setIncomeCategories } from '../state/mainState';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
 import {
@@ -93,11 +93,16 @@ export default function Report() {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Icon name="arrow-left" size={24} color={'#2A3356'} onPress={decrementMonth} />
+        <TouchableOpacity onPress={decrementMonth} style={{ width: 40 }}>
+          <Icon name="arrow-left" size={30} color={'#2A3356'} />
+        </TouchableOpacity>
+
         <Text style={styles.textHeader}>
           {choosenDate.getFullYear()}-{`0${choosenDate.getMonth() + 1}`.slice(-2)}
         </Text>
-        <Icon name="arrow-right" size={24} color={'#2A3356'} onPress={incrementMonth} />
+        <TouchableOpacity onPress={incrementMonth} style={{ width: 40 }}>
+          <Icon name="arrow-right" size={30} color={'#2A3356'} />
+        </TouchableOpacity>
       </View>
 
       <ScrollView>

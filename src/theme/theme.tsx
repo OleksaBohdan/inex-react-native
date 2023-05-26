@@ -10,7 +10,7 @@ export const theme = {
     text: 'black',
     disabled: 'gray',
     placeholder: 'gray',
-    notification: 'red',
-    backdrop: 'red',
+    notification: 'gray',
+    backdrop: 'rgba(128, 128, 128, 0.5)',
   },
 };
