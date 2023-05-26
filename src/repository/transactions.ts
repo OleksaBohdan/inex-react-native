@@ -1,9 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 import { Category } from './categories';
 
 export type TransactionType = 'expenses' | 'incomes';
 
 export type Transaction = {
+  id: string;
   value: string;
   transactionType: TransactionType;
   category: Category;
@@ -13,11 +16,27 @@ export type Transaction = {
 
 export const createExpenseTransaction = async (transaction: Transaction) => {
   try {
+    transaction.id = uuidv4();
     const valueAsNumber = parseFloat(transaction.value.replace(',', '.'));
     if (isNaN(valueAsNumber)) {
       throw new Error('Value cannot be converted to a number');
     }
     transaction.value = valueAsNumber.toFixed(2);
+
+    // Check if transaction date is today
+    const transactionDate = new Date(transaction.date);
+    const currentDate = new Date();
+    if (
+      transactionDate.getDate() === currentDate.getDate() &&
+      transactionDate.getMonth() === currentDate.getMonth() &&
+      transactionDate.getFullYear() === currentDate.getFullYear()
+    ) {
+      let now = new Date();
+      let offset = now.getTimezoneOffset() * 60000;
+      let localISOTime = new Date(now.getTime() - offset).toISOString().slice(0, -1);
+      transaction.date = localISOTime; // Update transaction date to local time
+    }
+
     const jsonValue = await AsyncStorage.getItem('@expenseTransactions');
     let transactions: Transaction[] = jsonValue != null ? JSON.parse(jsonValue) : [];
     transactions.push(transaction);
@@ -25,17 +44,34 @@ export const createExpenseTransaction = async (transaction: Transaction) => {
 
     await AsyncStorage.setItem('@expenseTransactions', jsonValueToStore);
   } catch (error) {
+    console.log(error);
     throw new Error(error);
   }
 };
 
 export const createIncomeTransaction = async (transaction: Transaction) => {
   try {
+    transaction.id = uuidv4();
     const valueAsNumber = parseFloat(transaction.value.replace(',', '.'));
     if (isNaN(valueAsNumber)) {
       throw new Error('Value cannot be converted to a number');
     }
     transaction.value = valueAsNumber.toFixed(2);
+
+    // Check if transaction date is today
+    const transactionDate = new Date(transaction.date);
+    const currentDate = new Date();
+    if (
+      transactionDate.getDate() === currentDate.getDate() &&
+      transactionDate.getMonth() === currentDate.getMonth() &&
+      transactionDate.getFullYear() === currentDate.getFullYear()
+    ) {
+      let now = new Date();
+      let offset = now.getTimezoneOffset() * 60000;
+      let localISOTime = new Date(now.getTime() - offset).toISOString().slice(0, -1);
+      transaction.date = localISOTime; // Update transaction date to local time
+    }
+
     const jsonValue = await AsyncStorage.getItem('@incomeTransactions');
     let transactions: Transaction[] = jsonValue != null ? JSON.parse(jsonValue) : [];
     transactions.push(transaction);
@@ -142,6 +178,20 @@ export const getSumIncomeTransactionsOfCurrentMonth = async (): Promise<string> 
     let sum = currentMonthIncomeTransactions.reduce((total, transaction) => total + Number(transaction.value), 0);
 
     return sum.toFixed(2);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const deleteTransactionById = async (id: string, transactionType: TransactionType): Promise<void> => {
+  try {
+    const transactionsKey = transactionType === 'expenses' ? '@expenseTransactions' : '@incomeTransactions';
+    const transactionsJson = await AsyncStorage.getItem(transactionsKey);
+    let transactions: Transaction[] = transactionsJson != null ? JSON.parse(transactionsJson) : [];
+
+    transactions = transactions.filter((transaction) => transaction.id !== id);
+
+    await AsyncStorage.setItem(transactionsKey, JSON.stringify(transactions));
   } catch (error) {
     throw new Error(error);
   }

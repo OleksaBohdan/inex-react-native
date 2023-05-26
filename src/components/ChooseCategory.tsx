@@ -55,10 +55,11 @@ export default function ChooseCategory({ closeModal }) {
 
   const categoriesToDisplay = selectedTransactionType === 'expenses' ? expenseCategories : incomeCategories;
 
-  const careateTransaction = async (category: Category) => {
+  const createTransaction = async (category: Category) => {
     setChoosenCategory(category);
 
     const transaction: Transaction = {
+      id: '',
       value: enteredValue,
       transactionType: selectedTransactionType,
       category,
@@ -94,17 +95,17 @@ export default function ChooseCategory({ closeModal }) {
           <Text style={styles.headerText}>Categories</Text>
           <Icon name="close" onPress={closeModal} size={24} />
         </View>
-        <Text style={styles.subHeaderText}>Costs</Text>
+        <Text style={styles.subHeaderText}>{selectedTransactionType}</Text>
         <ScrollView>
           {categoriesToDisplay.map((category: Category, index: number) => (
-            <ChooseCategoryCard key={index} name={category.name} onPress={() => careateTransaction(category)} />
+            <ChooseCategoryCard key={index} name={category.name} onPress={() => createTransaction(category)} />
           ))}
         </ScrollView>
       </View>
     </SafeAreaView>
   );
 }
-
+12;
 const ChooseCategoryCard = ({ name, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.card]}>

@@ -1,13 +1,33 @@
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { IMainState, toggleTransactionCreated } from '../state/mainState';
 import { StyleSheet, Text, View, Keyboard } from 'react-native';
-import React from 'react';
 import { TextInput } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
-export default function TransactionCardScreen() {
+import { deleteTransactionById, TransactionType } from '../repository/transactions';
+
+export default function TransactionCardScreen({ navigation }) {
+  const selectedTransaction = useSelector((state: IMainState) => state.selectedTransaction);
+  const [error, setError] = useState('');
+  const dispatch = useDispatch();
+
+  const deleteTransaction = async (id: string, type: TransactionType) => {
+    try {
+      await deleteTransactionById(id, type);
+      dispatch(toggleTransactionCreated());
+      navigation.goBack();
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  const headerColor = selectedTransaction.transactionType === 'expenses' ? '#CF5B4A' : '#88B548';
+
   return (
     <View style={styles.container} onTouchStart={Keyboard.dismiss}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Income</Text>
+      <View style={[styles.header, { backgroundColor: headerColor }]}>
+        <Text style={styles.headerText}>{selectedTransaction.transactionType}</Text>
       </View>
       <View style={styles.mainContainer}>
         <View style={styles.valueContainer}>
@@ -18,14 +38,14 @@ export default function TransactionCardScreen() {
             maxLength={10}
             onBlur={() => Keyboard.dismiss()}
             mode="outlined"
-            value="1758"
+            value={selectedTransaction.value}
           />
           <View>
             <Icon
               name="delete"
               style={styles.deleteIcon}
               onPress={() => {
-                console.log('Deleting...');
+                deleteTransaction(selectedTransaction.id, selectedTransaction.transactionType);
               }}
             />
           </View>
@@ -33,19 +53,15 @@ export default function TransactionCardScreen() {
 
         <View style={styles.dataContainer}>
           <Text style={styles.nameText}>Date</Text>
-          <Text style={styles.valueTableText}>23.02.2023</Text>
-        </View>
-        <View style={styles.dataContainer}>
-          <Text style={styles.nameText}>Type</Text>
-          <Text style={styles.valueTableText}>Income</Text>
+          <Text style={styles.valueTableText}>{selectedTransaction.date.slice(0, 10)}</Text>
         </View>
         <View style={styles.dataContainer}>
           <Text style={styles.nameText}>Category</Text>
-          <Text style={styles.valueTableText}>Зарплата</Text>
+          <Text style={styles.valueTableText}>{selectedTransaction.category.name}</Text>
         </View>
         <View style={styles.dataContainer}>
           <Text style={styles.nameText}>Comments</Text>
-          <Text style={styles.valueTableText}>Зарплата в моджике</Text>
+          <Text style={styles.valueTableText}>{selectedTransaction.comment}</Text>
         </View>
       </View>
     </View>

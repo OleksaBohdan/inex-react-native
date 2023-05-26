@@ -1,19 +1,30 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { IMainState, setSelectedTransaction } from '../state/mainState';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
 
-export default function TransactionCard({ onPress, category, comment, value, transactionType }) {
-  const textColor = transactionType === 'incomes' ? 'green' : 'black';
+import { Transaction } from '../repository/transactions';
+
+export default function TransactionCard({ onPress, category, comment, value, transactionType, transaction }) {
+  const textColor = transactionType === 'incomes' ? '#22980F' : '#000000';
   const valueDisplay = transactionType === 'expenses' ? `-${value}` : value;
+  const dispatch = useDispatch();
+
+  const handlePress = () => {
+    onPress();
+    console.log(transaction.id);
+    dispatch(setSelectedTransaction({ selectedTransaction: transaction }));
+  };
 
   return (
-    <View style={[styles.card]} onTouchEnd={onPress}>
+    <TouchableOpacity style={[styles.card]} onPress={handlePress}>
       <View>
         <Text style={styles.categoryText}>{category}</Text>
         {comment !== '' && <Text style={styles.commentText}>{comment}</Text>}
       </View>
       <Text style={[styles.valueText, { color: textColor }]}>{valueDisplay}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

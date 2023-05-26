@@ -53,6 +53,7 @@ export default function TransactionsList({ navigation }) {
                 value={transaction.value}
                 transactionType={transaction.transactionType}
                 onPress={handlePress}
+                transaction={transaction}
               />
             ))}
           </ScrollView>

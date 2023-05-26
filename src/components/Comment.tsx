@@ -19,7 +19,7 @@ export default function Comment() {
         value={enteredComment}
         label="Comment"
         style={styles.textInput}
-        maxLength={20}
+        maxLength={18}
       />
     </View>
   );
