@@ -78,6 +78,7 @@ export default function Categories() {
   };
 
   const handleDeleteCategory = async (categoryName: string) => {
+    setError('');
     if (choosenCategory === 'expenses') {
       try {
         await deleteExpenseCategory(categoryName);

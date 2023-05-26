@@ -37,8 +37,8 @@ export const getAllExpenseCategories = async (): Promise<Category[]> => {
     let categories = currentCategoriesJson == null ? [] : JSON.parse(currentCategoriesJson);
 
     if (!categories.find((category) => category.name === 'Any')) {
-      categories.unshift({ name: 'Any', range: 0 }); // adds 'Any' category at the start
-      await AsyncStorage.setItem('expenseCategories', JSON.stringify(categories)); // writes back to AsyncStorage
+      categories.unshift({ name: 'Any', range: 0 });
+      await AsyncStorage.setItem('expenseCategories', JSON.stringify(categories));
     }
 
     return categories;
@@ -64,6 +64,13 @@ export const deleteExpenseCategory = async (categoryName: string): Promise<void>
 
     if (!currentCategories.find((category) => category.name === categoryName)) {
       throw new Error('This category does not exist');
+    }
+
+    const currentTransactionsJson = await AsyncStorage.getItem('@expenseTransactions');
+    const currentTransactions = currentTransactionsJson == null ? [] : JSON.parse(currentTransactionsJson);
+
+    if (currentTransactions.find((transaction) => transaction.category.name === categoryName)) {
+      throw new Error(`Cannot delete category "${categoryName}" as it's used in existing transactions`);
     }
 
     const updatedCategories = currentCategories.filter((category) => category.name !== categoryName);
@@ -104,8 +111,8 @@ export const getAllIncomeCategories = async (): Promise<Category[]> => {
     let categories = currentCategoriesJson == null ? [] : JSON.parse(currentCategoriesJson);
 
     if (!categories.find((category) => category.name === 'Any')) {
-      categories.unshift({ name: 'Any', range: 0 }); // adds 'Any' category at the start
-      await AsyncStorage.setItem('incomeCategories', JSON.stringify(categories)); // writes back to AsyncStorage
+      categories.unshift({ name: 'Any', range: 0 });
+      await AsyncStorage.setItem('incomeCategories', JSON.stringify(categories));
     }
 
     return categories;
@@ -131,6 +138,13 @@ export const deleteIncomeCategory = async (categoryName: string): Promise<void> 
 
     if (!currentCategories.find((category) => category.name === categoryName)) {
       throw new Error('This category does not exist');
+    }
+
+    const currentTransactionsJson = await AsyncStorage.getItem('@incomeTransactions');
+    const currentTransactions = currentTransactionsJson == null ? [] : JSON.parse(currentTransactionsJson);
+
+    if (currentTransactions.find((transaction) => transaction.category.name === categoryName)) {
+      throw new Error(`Cannot delete category "${categoryName}" as it's used in existing transactions`);
     }
 
     const updatedCategories = currentCategories.filter((category) => category.name !== categoryName);
