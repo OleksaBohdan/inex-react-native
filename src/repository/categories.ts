@@ -8,16 +8,6 @@ export type Category = {
 };
 
 export const createExpenseCategory = async (categoryName: string): Promise<void> => {
-  // const clearAll = async () => {
-  //   try {
-  //     await AsyncStorage.clear();
-  //   } catch (e) {
-  //     // clear error
-  //   }
-
-  //   console.log('Done.');
-  // };
-  // await clearAll();
   const currentCategoriesJson = await AsyncStorage.getItem('expenseCategories');
   let currentCategories: Category[];
 
@@ -44,11 +34,11 @@ export const createExpenseCategory = async (categoryName: string): Promise<void>
 export const getAllExpenseCategories = async (): Promise<Category[]> => {
   try {
     const currentCategoriesJson = await AsyncStorage.getItem('expenseCategories');
-
     let categories = currentCategoriesJson == null ? [] : JSON.parse(currentCategoriesJson);
 
     if (!categories.find((category) => category.name === 'Any')) {
       categories.unshift({ name: 'Any', range: 0 }); // adds 'Any' category at the start
+      await AsyncStorage.setItem('expenseCategories', JSON.stringify(categories)); // writes back to AsyncStorage
     }
 
     return categories;
@@ -111,11 +101,11 @@ export const createIncomeCategory = async (categoryName: string): Promise<void> 
 export const getAllIncomeCategories = async (): Promise<Category[]> => {
   try {
     const currentCategoriesJson = await AsyncStorage.getItem('incomeCategories');
-
     let categories = currentCategoriesJson == null ? [] : JSON.parse(currentCategoriesJson);
 
     if (!categories.find((category) => category.name === 'Any')) {
       categories.unshift({ name: 'Any', range: 0 }); // adds 'Any' category at the start
+      await AsyncStorage.setItem('incomeCategories', JSON.stringify(categories)); // writes back to AsyncStorage
     }
 
     return categories;
@@ -150,3 +140,44 @@ export const deleteIncomeCategory = async (categoryName: string): Promise<void> 
     throw new Error('Error deleting category');
   }
 };
+
+export const updateExpenseCategoryRange = async (categoryName: string): Promise<void> => {
+  const currentCategoriesJson = await AsyncStorage.getItem('expenseCategories');
+  let currentCategories: Category[] = currentCategoriesJson == null ? [] : JSON.parse(currentCategoriesJson);
+
+  const category = currentCategories.find((category) => category.name === categoryName);
+
+  if (!category) {
+    throw new Error(`Expense Category ${categoryName} does not exist`);
+  }
+
+  category.range += 1;
+
+  await AsyncStorage.setItem('expenseCategories', JSON.stringify(currentCategories));
+};
+
+export const updateIncomeCategoryRange = async (categoryName: string): Promise<void> => {
+  const currentCategoriesJson = await AsyncStorage.getItem('incomeCategories');
+  let currentCategories: Category[] = currentCategoriesJson == null ? [] : JSON.parse(currentCategoriesJson);
+
+  const category = currentCategories.find((category) => category.name === categoryName);
+
+  if (!category) {
+    throw new Error(`Income Category ${categoryName} does not exist`);
+  }
+
+  category.range += 1;
+
+  await AsyncStorage.setItem('incomeCategories', JSON.stringify(currentCategories));
+};
+
+// const clearAll = async () => {
+//   try {
+//     await AsyncStorage.clear();
+//   } catch (e) {
+//     // clear error
+//   }
+
+//   console.log('Done.');
+// };
+// await clearAll();

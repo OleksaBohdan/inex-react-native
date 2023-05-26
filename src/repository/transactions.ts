@@ -3,6 +3,8 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import { Category } from './categories';
 
+import { updateIncomeCategoryRange, updateExpenseCategoryRange } from './categories';
+
 export type TransactionType = 'expenses' | 'incomes';
 
 export type Transaction = {
@@ -23,7 +25,6 @@ export const createExpenseTransaction = async (transaction: Transaction) => {
     }
     transaction.value = valueAsNumber.toFixed(2);
 
-    // Check if transaction date is today
     const transactionDate = new Date(transaction.date);
     const currentDate = new Date();
     if (
@@ -34,7 +35,7 @@ export const createExpenseTransaction = async (transaction: Transaction) => {
       let now = new Date();
       let offset = now.getTimezoneOffset() * 60000;
       let localISOTime = new Date(now.getTime() - offset).toISOString().slice(0, -1);
-      transaction.date = localISOTime; // Update transaction date to local time
+      transaction.date = localISOTime;
     }
 
     const jsonValue = await AsyncStorage.getItem('@expenseTransactions');
@@ -43,6 +44,9 @@ export const createExpenseTransaction = async (transaction: Transaction) => {
     const jsonValueToStore = JSON.stringify(transactions);
 
     await AsyncStorage.setItem('@expenseTransactions', jsonValueToStore);
+
+    const categoryName = transaction.category.name;
+    await updateExpenseCategoryRange(categoryName);
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -58,7 +62,6 @@ export const createIncomeTransaction = async (transaction: Transaction) => {
     }
     transaction.value = valueAsNumber.toFixed(2);
 
-    // Check if transaction date is today
     const transactionDate = new Date(transaction.date);
     const currentDate = new Date();
     if (
@@ -69,7 +72,7 @@ export const createIncomeTransaction = async (transaction: Transaction) => {
       let now = new Date();
       let offset = now.getTimezoneOffset() * 60000;
       let localISOTime = new Date(now.getTime() - offset).toISOString().slice(0, -1);
-      transaction.date = localISOTime; // Update transaction date to local time
+      transaction.date = localISOTime;
     }
 
     const jsonValue = await AsyncStorage.getItem('@incomeTransactions');
@@ -78,6 +81,9 @@ export const createIncomeTransaction = async (transaction: Transaction) => {
     const jsonValueToStore = JSON.stringify(transactions);
 
     await AsyncStorage.setItem('@incomeTransactions', jsonValueToStore);
+
+    const categoryName = transaction.category.name;
+    await updateIncomeCategoryRange(categoryName);
   } catch (error) {
     throw new Error(error);
   }
