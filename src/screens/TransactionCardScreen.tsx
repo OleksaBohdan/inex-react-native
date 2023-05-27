@@ -6,10 +6,11 @@ import { TextInput } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 import Error from '../components/Error';
-import { deleteTransactionById, TransactionType } from '../repository/transactions';
+import { deleteTransactionById, TransactionType, updateTransactionById } from '../repository/transactions';
 
 export default function TransactionCardScreen({ navigation }) {
   const selectedTransaction = useSelector((state: IMainState) => state.selectedTransaction);
+  const [transactionValue, setTransactionValue] = useState(selectedTransaction.value);
   const [error, setError] = useState('');
   const dispatch = useDispatch();
 
@@ -18,6 +19,17 @@ export default function TransactionCardScreen({ navigation }) {
       await deleteTransactionById(id, type);
       dispatch(toggleTransactionCreated());
       navigation.goBack();
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  const updateTransactionValue = async () => {
+    try {
+      await updateTransactionById(selectedTransaction.id, selectedTransaction.transactionType, {
+        value: transactionValue,
+      });
+      dispatch(toggleTransactionCreated());
     } catch (error) {
       setError(error);
     }
@@ -37,9 +49,10 @@ export default function TransactionCardScreen({ navigation }) {
             style={styles.valueInput}
             keyboardType="numeric"
             maxLength={10}
-            onBlur={() => Keyboard.dismiss()}
+            onBlur={updateTransactionValue}
             mode="outlined"
-            value={selectedTransaction.value}
+            value={transactionValue}
+            onChangeText={setTransactionValue}
           />
           <View>
             <Icon

@@ -1,15 +1,93 @@
-import React, { useState } from 'react';
+import * as Notifications from 'expo-notifications';
+import moment from 'moment';
+import * as TaskManager from 'expo-task-manager';
+import * as BackgroundFetch from 'expo-background-fetch';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Switch, Button, Dialog, Portal } from 'react-native-paper';
 import Icon from '@expo/vector-icons//MaterialIcons';
+
+import { getTransactionsByDay } from '../repository/transactions';
+
+const BACKGROUND_FETCH_TASK = 'background-fetch-task';
+
+let notificationId = null;
+
+const scheduleNotification = async () => {
+  notificationId = await Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'Expense reminder!',
+      body: 'You did not have any transactions yesterday',
+      data: { data: 'goes here' },
+    },
+    // trigger: { hour: 9, minute: 0, repeats: true },
+    trigger: { seconds: 60, repeats: true },
+  });
+};
+
+const cancelNotification = async () => {
+  if (notificationId) {
+    await Notifications.cancelScheduledNotificationAsync(notificationId);
+  }
+};
+
+const checkTransactions = async () => {
+  const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DDT00:00:00');
+
+  console.log(yesterday);
+
+  const transactions = await getTransactionsByDay(yesterday);
+
+  if (transactions.length === 0) {
+    scheduleNotification();
+  }
+};
+
+TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
+  try {
+    await checkTransactions();
+    return BackgroundFetch.BackgroundFetchResult.NewData;
+  } catch (err) {
+    return BackgroundFetch.BackgroundFetchResult.Failed;
+  }
+});
+
+const registerBackgroundFetch = async () => {
+  await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+    // minimumInterval: 24 * 60 * 60,
+    minimumInterval: 60,
+  });
+};
 
 export default function Settings() {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [visible, setVisible] = React.useState(false);
 
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  const onToggleSwitch = () => {
+    setIsSwitchOn((prevState) => {
+      if (!prevState) {
+        checkTransactions();
+      } else {
+        cancelNotification();
+      }
+      return !prevState;
+    });
+  };
+
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        alert('No permission for notifications!');
+      }
+    };
+
+    requestPermissions();
+    registerBackgroundFetch(); // register the background task
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -31,6 +109,7 @@ export default function Settings() {
               <Dialog.Title>Reminder Information</Dialog.Title>
               <Dialog.Content>
                 <Text>You will be remined at 9:00 next day if previous day don't have transactions.</Text>
+                <Text>Plese, don't forget to enable notifications at the Settings if they disabled for this app.</Text>
               </Dialog.Content>
               <Dialog.Actions>
                 <Button onPress={hideDialog}>Ok</Button>

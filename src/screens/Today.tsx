@@ -15,13 +15,13 @@ const TodayStack = createStackNavigator();
 
 export function TodayStackNavigator() {
   return (
-    <TodayStack.Navigator screenOptions={{ headerShown: false }}>
+    <TodayStack.Navigator screenOptions={{ headerShown: false }} detachInactiveScreens={true}>
       <TodayStack.Screen name="TodayScreen" component={Today} />
       <TodayStack.Screen name="TransactionCardScreen" component={TransactionCardScreen} />
     </TodayStack.Navigator>
   );
 }
-
+//
 export default function Today({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
 

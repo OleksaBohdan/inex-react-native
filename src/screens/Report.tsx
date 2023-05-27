@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IMainState, setExpenseCategories, setIncomeCategories } from '../state/mainState';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
 import Error from '../components/Error';
@@ -74,6 +75,7 @@ export default function Report() {
   };
 
   const decrementMonth = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setChoosenDate((prevState) => new Date(prevState.getFullYear(), prevState.getMonth() - 1));
   };
 
@@ -85,6 +87,7 @@ export default function Report() {
       const prevYear = prevState.getFullYear();
       // Allow increment only if it's not the current month and year
       if (prevYear < currentYear || (prevYear === currentYear && prevMonth < currentMonth)) {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         return new Date(prevState.getFullYear(), prevState.getMonth() + 1);
       }
       return prevState;

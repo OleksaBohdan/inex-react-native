@@ -254,3 +254,37 @@ export const getMonthSumByIncomeCategory = async (
     throw new Error(error);
   }
 };
+
+export const updateTransactionById = async (
+  id: string,
+  transactionType: TransactionType,
+  updatedTransaction: Partial<Transaction>
+): Promise<void> => {
+  const valueAsNumber = parseFloat(updatedTransaction.value.replace(',', '.'));
+  if (isNaN(valueAsNumber)) {
+    throw new Error('Value cannot be converted to a number');
+  }
+  updatedTransaction.value = valueAsNumber.toFixed(2);
+
+  try {
+    const transactionsKey = transactionType === 'expenses' ? '@expenseTransactions' : '@incomeTransactions';
+    const transactionsJson = await AsyncStorage.getItem(transactionsKey);
+    let transactions: Transaction[] = transactionsJson != null ? JSON.parse(transactionsJson) : [];
+
+    const transactionIndex = transactions.findIndex((transaction) => transaction.id === id);
+
+    if (transactionIndex === -1) {
+      throw new Error(`Transaction with id ${id} not found.`);
+    }
+
+    // Update the transaction with the new data
+    transactions[transactionIndex] = {
+      ...transactions[transactionIndex],
+      ...updatedTransaction,
+    };
+
+    await AsyncStorage.setItem(transactionsKey, JSON.stringify(transactions));
+  } catch (error) {
+    throw new Error(error);
+  }
+};
