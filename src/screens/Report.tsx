@@ -4,6 +4,7 @@ import { IMainState, setExpenseCategories, setIncomeCategories } from '../state/
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
+import Error from '../components/Error';
 import {
   getSumExpenseTransactionsOfCurrentMonth,
   getSumIncomeTransactionsOfCurrentMonth,
@@ -122,6 +123,7 @@ export default function Report() {
           <ReportCard key={index} name={category.name} total={`-${category.total}`} />
         ))}
       </ScrollView>
+      {error ? <Error errorText={error} /> : null}
     </View>
   );
 }

@@ -7,6 +7,7 @@ import { SegmentedButtons } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 import CategoryCard from '../components/CategoryCard';
+import Error from '../components/Error';
 import {
   createExpenseCategory,
   getAllExpenseCategories,
@@ -155,7 +156,6 @@ export default function Categories() {
           value={category}
           onChangeText={setCategory}
         />
-        <Text style={styles.errorText}>{error}</Text>
 
         <View style={styles.addBtnContainer}>
           <Icon style={styles.addBtn} name={'add-circle-outline'} onPress={handleAddCategory} />
@@ -167,6 +167,8 @@ export default function Categories() {
           <CategoryCard key={index} name={category.name} onDelete={() => handleDeleteCategory(category.name)} />
         ))}
       </ScrollView>
+
+      {error ? <Error errorText={error} /> : null}
     </View>
   );
 }

@@ -15,7 +15,7 @@ export default function CreateTransactionBtn({ showModal }) {
 
   return (
     <View style={styles.container}>
-      <Button mode="contained" onPress={handlePress} contentStyle={styles.addBtn} style={{ borderRadius: 100 }}>
+      <Button mode="contained" onPress={handlePress} contentStyle={styles.addBtn} style={{ borderRadius: 50 }}>
         <Text style={styles.textBtn}>Create transaction</Text>
       </Button>
     </View>

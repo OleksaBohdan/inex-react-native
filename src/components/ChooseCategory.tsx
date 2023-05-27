@@ -11,6 +11,7 @@ import {
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
+import Error from './Error';
 import { Transaction, createExpenseTransaction, createIncomeTransaction } from '../repository/transactions';
 import { Category, getAllExpenseCategories, getAllIncomeCategories } from '../repository/categories';
 
@@ -102,10 +103,12 @@ export default function ChooseCategory({ closeModal }) {
           ))}
         </ScrollView>
       </View>
+
+      {error ? <Error errorText={error} /> : null}
     </SafeAreaView>
   );
 }
-12;
+
 const ChooseCategoryCard = ({ name, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.card]}>

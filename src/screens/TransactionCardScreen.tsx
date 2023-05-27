@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
+import Error from '../components/Error';
 import { deleteTransactionById, TransactionType } from '../repository/transactions';
 
 export default function TransactionCardScreen({ navigation }) {
@@ -64,6 +65,8 @@ export default function TransactionCardScreen({ navigation }) {
           <Text style={styles.valueTableText}>{selectedTransaction.comment}</Text>
         </View>
       </View>
+
+      {error ? <Error errorText={error} /> : null}
     </View>
   );
 }

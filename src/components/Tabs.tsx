@@ -35,6 +35,7 @@ function MainTabs() {
         },
         headerShown: false,
         tabBarActiveTintColor: 'black',
+        tabBarStyle: { height: 95 },
       })}
     >
       <Tab.Screen name="Today" component={TodayStackNavigator} />

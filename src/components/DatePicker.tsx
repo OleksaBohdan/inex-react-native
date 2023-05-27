@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
     padding: 15,
     backgroundColor: '#FFFFFF',
@@ -86,8 +87,10 @@ const styles = StyleSheet.create({
   },
   textExpenses: {
     color: '#E80000',
+    fontSize: 16,
   },
   textIncomes: {
     color: '#22980F',
+    fontSize: 16,
   },
 });

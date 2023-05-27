@@ -78,7 +78,7 @@ export const deleteExpenseCategory = async (categoryName: string): Promise<void>
 
     await AsyncStorage.setItem('expenseCategories', JSON.stringify(updatedCategories));
   } catch (error) {
-    throw new Error('Error deleting category');
+    throw error;
   }
 };
 
@@ -152,7 +152,7 @@ export const deleteIncomeCategory = async (categoryName: string): Promise<void> 
 
     await AsyncStorage.setItem('incomeCategories', JSON.stringify(updatedCategories));
   } catch (error) {
-    throw new Error('Error deleting category');
+    throw error;
   }
 };
 
