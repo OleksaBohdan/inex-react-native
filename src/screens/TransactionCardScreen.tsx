@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IMainState, toggleTransactionCreated } from '../state/mainState';
 import { StyleSheet, Text, View, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 import { deleteTransactionById, TransactionType, updateTransactionById } from '../repository/transactions';
@@ -22,12 +23,22 @@ export default function TransactionCardScreen({ navigation }) {
     }
   };
 
+  const showToast = () => {
+    Toast.show({
+      type: 'success',
+      position: 'top',
+      text1: 'Update Successful',
+      text2: 'Transaction updated successfully',
+    });
+  };
+
   const updateTransactionValue = async () => {
     try {
       await updateTransactionById(selectedTransaction.id, selectedTransaction.transactionType, {
         value: transactionValue,
       });
       dispatch(toggleTransactionCreated());
+      showToast();
     } catch (error) {
       alert(error.message);
     }
@@ -76,6 +87,7 @@ export default function TransactionCardScreen({ navigation }) {
           <Text style={styles.valueTableText}>{selectedTransaction.comment}</Text>
         </View>
       </View>
+      <Toast />
     </View>
   );
 }
