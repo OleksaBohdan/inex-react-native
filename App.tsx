@@ -5,7 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import MainTabs from './src/components/Tabs';
 import { StatusBar } from 'expo-status-bar';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { useColorScheme, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { useColorScheme } from 'react-native';
 import { theme } from './src/theme/theme';
 import { configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from './src/state/mainState';

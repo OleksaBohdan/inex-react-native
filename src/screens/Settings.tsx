@@ -20,8 +20,8 @@ const scheduleNotification = async () => {
       body: 'You did not have any transactions yesterday',
       data: { data: 'goes here' },
     },
-    // trigger: { hour: 9, minute: 0, repeats: true },
-    trigger: { seconds: 60, repeats: true },
+    trigger: { hour: 9, minute: 0, repeats: true },
+    // trigger: { seconds: 60, repeats: true },
   });
 };
 
@@ -54,8 +54,8 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 
 const registerBackgroundFetch = async () => {
   await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    // minimumInterval: 24 * 60 * 60,
-    minimumInterval: 60,
+    minimumInterval: 24 * 60 * 60,
+    // minimumInterval: 60,
   });
 };
 
