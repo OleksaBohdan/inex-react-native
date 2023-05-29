@@ -8,13 +8,12 @@ import { Switch, Button, Dialog, Portal } from 'react-native-paper';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
 import { getTransactionsByDay } from '../repository/transactions';
+import { createNotificationId, getNotificationId, deleteNotificationId } from '../repository/notificationId';
 
 const BACKGROUND_FETCH_TASK = 'background-fetch-task';
 
-let notificationId = null;
-
 const scheduleNotification = async () => {
-  notificationId = await Notifications.scheduleNotificationAsync({
+  const notificationId = await Notifications.scheduleNotificationAsync({
     content: {
       title: 'Expense reminder!',
       body: 'You did not have any transactions yesterday',
@@ -23,12 +22,15 @@ const scheduleNotification = async () => {
     trigger: { hour: 9, minute: 0, repeats: true },
     // trigger: { seconds: 60, repeats: true },
   });
+  await createNotificationId(notificationId);
 };
 
 const cancelNotification = async () => {
+  const notificationId = await getNotificationId();
   if (notificationId) {
     await Notifications.cancelScheduledNotificationAsync(notificationId);
   }
+  await deleteNotificationId();
 };
 
 const checkTransactions = async () => {
