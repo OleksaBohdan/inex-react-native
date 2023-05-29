@@ -7,7 +7,6 @@ import { SegmentedButtons } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 import CategoryCard from '../components/CategoryCard';
-import Error from '../components/Error';
 import {
   createExpenseCategory,
   getAllExpenseCategories,
@@ -24,7 +23,6 @@ export default function Categories() {
   const [category, setCategory] = useState('');
   const expenseCategories = useSelector((state: IMainState) => state.expenseCategories);
   const incomeCategories = useSelector((state: IMainState) => state.incomeCategories);
-  const [error, setError] = useState('');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,7 +48,7 @@ export default function Categories() {
       categories = categories.sort((a, b) => b.total - a.total);
       dispatch(setExpenseCategories({ expenseCategories: categories }));
     } catch (error) {
-      setError(error.message);
+      alert(error.message);
     }
   };
 
@@ -68,26 +66,25 @@ export default function Categories() {
       categories = categories.sort((a, b) => b.total - a.total);
       dispatch(setIncomeCategories({ incomeCategories: categories }));
     } catch (error) {
-      setError(error.message);
+      alert(error.message);
     }
   };
 
   const handleAddCategory = async () => {
     if (category !== '') {
-      setError('');
       if (choosenCategory === 'expenses') {
         try {
           await createExpenseCategory(category);
           showExpenseCategories();
         } catch (error) {
-          setError(error.message);
+          alert(error.message);
         }
       } else if (choosenCategory === 'incomes') {
         try {
           await createIncomeCategory(category);
           showIncomeCategories();
         } catch (error) {
-          setError(error.message);
+          alert(error.message);
         }
       }
       setCategory('');
@@ -96,20 +93,19 @@ export default function Categories() {
   };
 
   const handleDeleteCategory = async (categoryName: string) => {
-    setError('');
     if (choosenCategory === 'expenses') {
       try {
         await deleteExpenseCategory(categoryName);
         showExpenseCategories();
       } catch (error) {
-        setError(error.message);
+        alert(error.message);
       }
     } else if (choosenCategory === 'incomes') {
       try {
         await deleteIncomeCategory(categoryName);
         showIncomeCategories();
       } catch (error) {
-        setError(error.message);
+        alert(error.message);
       }
     }
     dispatch(toggleTransactionCreated());
@@ -167,8 +163,6 @@ export default function Categories() {
           <CategoryCard key={index} name={category.name} onDelete={() => handleDeleteCategory(category.name)} />
         ))}
       </ScrollView>
-
-      {error ? <Error errorText={error} /> : null}
     </View>
   );
 }

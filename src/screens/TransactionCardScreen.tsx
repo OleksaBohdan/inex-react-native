@@ -5,13 +5,11 @@ import { StyleSheet, Text, View, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
-import Error from '../components/Error';
 import { deleteTransactionById, TransactionType, updateTransactionById } from '../repository/transactions';
 
 export default function TransactionCardScreen({ navigation }) {
   const selectedTransaction = useSelector((state: IMainState) => state.selectedTransaction);
   const [transactionValue, setTransactionValue] = useState(selectedTransaction.value);
-  const [error, setError] = useState('');
   const dispatch = useDispatch();
 
   const deleteTransaction = async (id: string, type: TransactionType) => {
@@ -20,7 +18,7 @@ export default function TransactionCardScreen({ navigation }) {
       dispatch(toggleTransactionCreated());
       navigation.goBack();
     } catch (error) {
-      setError(error);
+      alert(error.message);
     }
   };
 
@@ -31,7 +29,7 @@ export default function TransactionCardScreen({ navigation }) {
       });
       dispatch(toggleTransactionCreated());
     } catch (error) {
-      setError(error);
+      alert(error.message);
     }
   };
 
@@ -78,8 +76,6 @@ export default function TransactionCardScreen({ navigation }) {
           <Text style={styles.valueTableText}>{selectedTransaction.comment}</Text>
         </View>
       </View>
-
-      {error ? <Error errorText={error} /> : null}
     </View>
   );
 }

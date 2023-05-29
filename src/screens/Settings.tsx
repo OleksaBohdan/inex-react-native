@@ -34,8 +34,6 @@ const cancelNotification = async () => {
 const checkTransactions = async () => {
   const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DDT00:00:00');
 
-  console.log(yesterday);
-
   const transactions = await getTransactionsByDay(yesterday);
 
   if (transactions.length === 0) {

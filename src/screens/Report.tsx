@@ -5,7 +5,6 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import * as Haptics from 'expo-haptics';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
-import Error from '../components/Error';
 import {
   getSumExpenseTransactionsOfCurrentMonth,
   getSumIncomeTransactionsOfCurrentMonth,
@@ -21,7 +20,6 @@ export default function Report() {
   const [incomeSum, setIncomeSum] = useState('');
   const expenseCategories = useSelector((state: IMainState) => state.expenseCategories);
   const incomeCategories = useSelector((state: IMainState) => state.incomeCategories);
-  const [error, setError] = useState('');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -53,7 +51,7 @@ export default function Report() {
       categories = categories.sort((a, b) => b.total - a.total);
       dispatch(setExpenseCategories({ expenseCategories: categories }));
     } catch (error) {
-      setError(error.message);
+      alert(error.message);
     }
   };
 
@@ -70,7 +68,7 @@ export default function Report() {
       categories = categories.sort((a, b) => b.total - a.total);
       dispatch(setIncomeCategories({ incomeCategories: categories }));
     } catch (error) {
-      setError(error.message);
+      alert(error.message);
     }
   };
 
@@ -126,7 +124,6 @@ export default function Report() {
           <ReportCard key={index} name={category.name} total={`-${category.total}`} />
         ))}
       </ScrollView>
-      {error ? <Error errorText={error} /> : null}
     </View>
   );
 }

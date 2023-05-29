@@ -11,7 +11,6 @@ import {
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
-import Error from './Error';
 import { Transaction, createExpenseTransaction, createIncomeTransaction } from '../repository/transactions';
 import { Category, getAllExpenseCategories, getAllIncomeCategories } from '../repository/categories';
 
@@ -23,7 +22,6 @@ export default function ChooseCategory({ closeModal }) {
   const enteredComment = useSelector((state: IMainState) => state.enteredComment);
   const expenseCategories = useSelector((state: IMainState) => state.expenseCategories);
   const incomeCategories = useSelector((state: IMainState) => state.incomeCategories);
-  const [error, setError] = useState('');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -40,7 +38,7 @@ export default function ChooseCategory({ closeModal }) {
       categories = categories.sort((a, b) => b.range - a.range);
       dispatch(setExpenseCategories({ expenseCategories: categories }));
     } catch (error) {
-      setError(error.message);
+      alert(error.message);
     }
   };
 
@@ -50,7 +48,7 @@ export default function ChooseCategory({ closeModal }) {
       categories = categories.sort((a, b) => b.range - a.range);
       dispatch(setIncomeCategories({ incomeCategories: categories }));
     } catch (error) {
-      setError(error.message);
+      alert(error.message);
     }
   };
 
@@ -72,13 +70,13 @@ export default function ChooseCategory({ closeModal }) {
       try {
         await createExpenseTransaction(transaction);
       } catch (error) {
-        setError(error);
+        alert(error.message);
       }
     } else if (selectedTransactionType === 'incomes') {
       try {
         await createIncomeTransaction(transaction);
       } catch (error) {
-        setError(error);
+        alert(error.message);
       }
     }
 
@@ -103,8 +101,6 @@ export default function ChooseCategory({ closeModal }) {
           ))}
         </ScrollView>
       </View>
-
-      {error ? <Error errorText={error} /> : null}
     </SafeAreaView>
   );
 }
