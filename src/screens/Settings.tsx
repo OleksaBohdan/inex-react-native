@@ -109,7 +109,7 @@ export default function Settings() {
               <Dialog.Title>Reminder Information</Dialog.Title>
               <Dialog.Content>
                 <Text>You will be remined at 9:00 next day if previous day don't have transactions.</Text>
-                <Text>Plese, don't forget to enable notifications at the Settings if they disabled for this app.</Text>
+                <Text>Please, don't forget to enable notifications at the Settings if they disabled for this app.</Text>
               </Dialog.Content>
               <Dialog.Actions>
                 <Button onPress={hideDialog}>Ok</Button>
