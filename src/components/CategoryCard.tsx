@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import React from 'react';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
@@ -6,7 +6,14 @@ export default function CategoryCard({ name, onDelete }) {
   return (
     <View style={[styles.card]}>
       <Text style={styles.cardNameText}> {name}</Text>
-      {name !== 'Any' && <Icon name="delete" size={16} onPress={onDelete} />}
+      <TouchableHighlight
+        onPress={onDelete}
+        underlayColor="#DDDDDD"
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        style={styles.roundedTouchable}
+      >
+        <View style={styles.iconContainer}>{name !== 'Any' ? <Icon name="delete" size={16} /> : null}</View>
+      </TouchableHighlight>
     </View>
   );
 }
@@ -27,5 +34,12 @@ const styles = StyleSheet.create({
   cardNameText: {
     fontSize: 16,
     fontWeight: '500',
+  },
+  roundedTouchable: {
+    borderRadius: 30,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
