@@ -4,11 +4,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { Switch, Button, Dialog, Portal } from 'react-native-paper';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
-import { getTransactionsByDay } from '../repository/transactions';
+// import { getTransactionsByDay } from '../repository/transactions';
 import { createNotificationId, getNotificationId, deleteNotificationId } from '../repository/notificationId';
 
 const BACKGROUND_FETCH_TASK = 'background-fetch-task';
@@ -35,21 +35,21 @@ const cancelNotification = async () => {
   await AsyncStorage.setItem('notificationScheduled', 'false');
 };
 
-const checkTransactions = async () => {
-  const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DDT00:00:00');
-  const transactions = await getTransactionsByDay(yesterday);
-  const isNotificationScheduled = await AsyncStorage.getItem('notificationScheduled');
+// const checkTransactions = async () => {
+//   const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DDT00:00:00');
+//   const transactions = await getTransactionsByDay(yesterday);
+//   const isNotificationScheduled = await AsyncStorage.getItem('notificationScheduled');
 
-  if (transactions.length === 0 && isNotificationScheduled === 'false') {
-    scheduleNotification();
-  } else if (transactions.length !== 0 && isNotificationScheduled === 'true') {
-    cancelNotification();
-  }
-};
+//   if (transactions.length === 0 && isNotificationScheduled === 'false') {
+//     scheduleNotification();
+//   } else if (transactions.length !== 0 && isNotificationScheduled === 'true') {
+//     cancelNotification();
+//   }
+// };
 
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   try {
-    await checkTransactions();
+    // await checkTransactions();
     return BackgroundFetch.BackgroundFetchResult.NewData;
   } catch (err) {
     return BackgroundFetch.BackgroundFetchResult.Failed;
@@ -72,7 +72,7 @@ export default function Settings() {
       const newState = !prevState;
       AsyncStorage.setItem('switchState', JSON.stringify(newState));
       if (!prevState) {
-        checkTransactions();
+        scheduleNotification();
       } else {
         cancelNotification();
       }
@@ -109,9 +109,13 @@ export default function Settings() {
         <View style={styles.settingsItemContainer}>
           <View style={styles.settingsItemContainer}>
             <Text style={styles.settingsItemText}>Expense reminder</Text>
-            <TouchableOpacity onPress={showDialog}>
+            <TouchableHighlight
+              onPress={showDialog}
+              underlayColor="#FFFFFF"
+              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+            >
               <Icon name="help-outline" style={styles.helpIcon} />
-            </TouchableOpacity>
+            </TouchableHighlight>
           </View>
 
           <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
@@ -119,8 +123,7 @@ export default function Settings() {
             <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialogBackground}>
               <Dialog.Title>Reminder Information</Dialog.Title>
               <Dialog.Content>
-                <Text>You will be remined at 9:00 next day if previous day don't have transactions.</Text>
-                <Text>Please, don't forget to enable notifications at the Settings if they disabled for this app.</Text>
+                <Text>We'll remind you at 9 AM daily to log your last day's transactions.</Text>
               </Dialog.Content>
               <Dialog.Actions>
                 <Button onPress={hideDialog}>Ok</Button>
