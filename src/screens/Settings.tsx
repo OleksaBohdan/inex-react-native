@@ -1,5 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import React, { useState, useEffect } from 'react';
@@ -20,9 +21,9 @@ const scheduleNotification = async () => {
       data: { data: 'goes here' },
     },
     trigger: { hour: 9, minute: 0, repeats: true },
-    // trigger: { seconds: 60, repeats: true },
   });
   await createNotificationId(notificationId);
+  await AsyncStorage.setItem('notificationScheduled', 'true');
 };
 
 const cancelNotification = async () => {
@@ -31,15 +32,18 @@ const cancelNotification = async () => {
     await Notifications.cancelScheduledNotificationAsync(notificationId);
   }
   await deleteNotificationId();
+  await AsyncStorage.setItem('notificationScheduled', 'false');
 };
 
 const checkTransactions = async () => {
   const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DDT00:00:00');
-
   const transactions = await getTransactionsByDay(yesterday);
+  const isNotificationScheduled = await AsyncStorage.getItem('notificationScheduled');
 
-  if (transactions.length === 0) {
+  if (transactions.length === 0 && isNotificationScheduled === 'false') {
     scheduleNotification();
+  } else if (transactions.length !== 0 && isNotificationScheduled === 'true') {
+    cancelNotification();
   }
 };
 
@@ -65,12 +69,14 @@ export default function Settings() {
 
   const onToggleSwitch = () => {
     setIsSwitchOn((prevState) => {
+      const newState = !prevState;
+      AsyncStorage.setItem('switchState', JSON.stringify(newState));
       if (!prevState) {
         checkTransactions();
       } else {
         cancelNotification();
       }
-      return !prevState;
+      return newState;
     });
   };
 
@@ -82,6 +88,11 @@ export default function Settings() {
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== 'granted') {
         alert('No permission for notifications!');
+      }
+
+      const storedSwitchState = await AsyncStorage.getItem('switchState');
+      if (storedSwitchState) {
+        setIsSwitchOn(JSON.parse(storedSwitchState));
       }
     };
 
