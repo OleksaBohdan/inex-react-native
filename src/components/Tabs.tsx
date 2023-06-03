@@ -13,6 +13,7 @@ function MainTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        unmountOnBlur: true,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -33,6 +34,7 @@ function MainTabs() {
 
           return <Icon name={iconName} size={size} color={color} />;
         },
+
         headerShown: false,
         tabBarActiveTintColor: 'black',
       })}

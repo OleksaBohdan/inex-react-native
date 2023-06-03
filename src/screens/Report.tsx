@@ -112,17 +112,21 @@ export default function Report() {
           <Text style={styles.categoryHeaderText}>Month Incomes</Text>
           <Text style={styles.categoryHeaderText}>{incomeSum}</Text>
         </View>
-        {incomeCategories.map((category, index) => (
-          <ReportCard key={index} name={category.name} total={category.total} />
-        ))}
+        {incomeCategories.map(
+          (category, index) =>
+            category.name &&
+            category.total !== undefined && <ReportCard key={index} name={category.name} total={category.total} />
+        )}
 
         <View style={styles.categoryHeader}>
           <Text style={styles.categoryHeaderText}>Month Expenses</Text>
           <Text style={styles.categoryHeaderText}>-{expenseSum}</Text>
         </View>
-        {expenseCategories.map((category, index) => (
-          <ReportCard key={index} name={category.name} total={`-${category.total}`} />
-        ))}
+        {expenseCategories.map(
+          (category, index) =>
+            category.name &&
+            category.total !== undefined && <ReportCard key={index} name={category.name} total={`-${category.total}`} />
+        )}
       </ScrollView>
     </View>
   );
