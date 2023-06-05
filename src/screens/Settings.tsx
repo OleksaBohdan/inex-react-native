@@ -8,7 +8,6 @@ import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight } from 're
 import { Switch, Button, Dialog, Portal } from 'react-native-paper';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
-// import { getTransactionsByDay } from '../repository/transactions';
 import { createNotificationId, getNotificationId, deleteNotificationId } from '../repository/notificationId';
 
 const BACKGROUND_FETCH_TASK = 'background-fetch-task';
@@ -17,7 +16,7 @@ const scheduleNotification = async () => {
   const notificationId = await Notifications.scheduleNotificationAsync({
     content: {
       title: 'Expense reminder!',
-      body: 'You did not have any transactions yesterday',
+      body: 'Have you added your transactions for yesterday?',
       data: { data: 'goes here' },
     },
     trigger: { hour: 9, minute: 0, repeats: true },
@@ -35,21 +34,8 @@ const cancelNotification = async () => {
   await AsyncStorage.setItem('notificationScheduled', 'false');
 };
 
-// const checkTransactions = async () => {
-//   const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DDT00:00:00');
-//   const transactions = await getTransactionsByDay(yesterday);
-//   const isNotificationScheduled = await AsyncStorage.getItem('notificationScheduled');
-
-//   if (transactions.length === 0 && isNotificationScheduled === 'false') {
-//     scheduleNotification();
-//   } else if (transactions.length !== 0 && isNotificationScheduled === 'true') {
-//     cancelNotification();
-//   }
-// };
-
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   try {
-    // await checkTransactions();
     return BackgroundFetch.BackgroundFetchResult.NewData;
   } catch (err) {
     return BackgroundFetch.BackgroundFetchResult.Failed;
