@@ -3,7 +3,7 @@
     "userInterfaceStyle": "automatic",
     "name": "Inex",
     "slug": "inex-expenses",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "icon": "./assets/icon.png",
     "backgroundColor": "#FFFFFF",
     "updates": {
@@ -11,7 +11,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "buildNumber": "1.0.2",
+      "buildNumber": "1.0.3",
       "supportsTablet": true,
       "bundleIdentifier": "com.sublimeapps.inexexpenses"
     },
