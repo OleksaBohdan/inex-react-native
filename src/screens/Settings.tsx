@@ -1,10 +1,9 @@
 import * as Notifications from 'expo-notifications';
-import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { Switch, Button, Dialog, Portal } from 'react-native-paper';
 import Icon from '@expo/vector-icons//MaterialIcons';
 
@@ -52,6 +51,7 @@ const registerBackgroundFetch = async () => {
 export default function Settings() {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [visible, setVisible] = React.useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
 
   const onToggleSwitch = () => {
     setIsSwitchOn((prevState) => {
@@ -72,8 +72,10 @@ export default function Settings() {
   useEffect(() => {
     const requestPermissions = async () => {
       const { status } = await Notifications.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+
       if (status !== 'granted') {
-        alert('No permission for notifications!');
+        alert('No permission for notifications! Please, open Settings and enable notifications for this app.');
       }
 
       const storedSwitchState = await AsyncStorage.getItem('switchState');
@@ -104,7 +106,8 @@ export default function Settings() {
             </TouchableHighlight>
           </View>
 
-          <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
+          <Switch value={isSwitchOn} onValueChange={onToggleSwitch} disabled={!hasPermission} />
+
           <Portal>
             <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialogBackground}>
               <Dialog.Title>Reminder Information</Dialog.Title>

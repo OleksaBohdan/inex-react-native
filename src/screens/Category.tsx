@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IMainState, setExpenseCategories, setIncomeCategories, toggleTransactionCreated } from '../state/mainState';
 import { View, Text, StyleSheet, ScrollView, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { SegmentedButtons } from 'react-native-paper';
+import { SegmentedButtons, Button } from 'react-native-paper';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
 import CategoryCard from '../components/CategoryCard';
@@ -89,6 +89,8 @@ export default function Categories() {
       }
       setCategory('');
       dispatch(toggleTransactionCreated());
+    } else {
+      alert('Enter category name');
     }
   };
 
@@ -154,7 +156,15 @@ export default function Categories() {
         />
 
         <View style={styles.addBtnContainer}>
-          <Icon style={styles.addBtn} name={'add-circle-outline'} onPress={handleAddCategory} />
+          {/* <Icon style={styles.addBtn} name={'add-circle-outline'} onPress={handleAddCategory} /> */}
+          <Button
+            mode="contained"
+            onPress={handleAddCategory}
+            contentStyle={styles.addBtn}
+            style={{ borderRadius: 50 }}
+          >
+            <Text>Create category</Text>
+          </Button>
         </View>
       </View>
 
@@ -201,6 +211,6 @@ const styles = StyleSheet.create({
   addBtn: {
     fontSize: 48,
     color: '#2E76B0',
+    backgroundColor: '#0077B5',
   },
-  errorText: {},
 });
