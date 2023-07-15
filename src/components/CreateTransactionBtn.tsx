@@ -4,10 +4,16 @@ import { useSelector } from 'react-redux';
 import { IMainState } from '../state/mainState';
 import { Button } from 'react-native-paper';
 
+// for resting events
+import appsFlyer from 'react-native-appsflyer';
+
 export default function CreateTransactionBtn({ showModal }) {
   const enteredValue = useSelector((state: IMainState) => state.enteredValue);
 
   const handlePress = () => {
+    // for resting events
+    appsFlyer.logEvent('createTransaction', { enteredValue });
+
     if (enteredValue !== '') {
       showModal();
     }

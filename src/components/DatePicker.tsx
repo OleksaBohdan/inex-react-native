@@ -1,9 +1,11 @@
+import * as DateFns from 'date-fns';
 import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IMainState, setSelectedDate } from '../state/mainState';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from '@expo/vector-icons//MaterialIcons';
+import moment from 'moment';
 
 export default function DatePicker() {
   const selectedDate = useSelector((state: IMainState) => state.selectedDate);
@@ -20,7 +22,10 @@ export default function DatePicker() {
 
   const handleConfirm = useCallback(
     (date: Date) => {
-      dispatch(setSelectedDate({ selectedDate: date.toISOString() }));
+      console.log('date', date);
+      const utcDate = moment.utc(date).toDate();
+      console.log('utcDate', utcDate);
+      dispatch(setSelectedDate({ selectedDate: utcDate.toISOString() }));
       hideDatePicker();
     },
     [hideDatePicker]
@@ -40,7 +45,7 @@ export default function DatePicker() {
           display="inline"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
-          maximumDate={new Date()}
+          maximumDate={DateFns.endOfDay(new Date())}
           locale="en_GB"
         />
       </View>

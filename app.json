@@ -10,10 +10,12 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
+    "scheme": "inexbudget",
     "ios": {
       "buildNumber": "1.0.3",
       "supportsTablet": true,
-      "bundleIdentifier": "com.sublimeapps.inexexpenses"
+      "bundleIdentifier": "com.sublimeapps.inexexpenses",
+      "associatedDomains": ["applinks:inexbudget.onelink.me"]
     },
     "android": {
       "versionCode": 2
@@ -22,6 +24,15 @@
       "eas": {
         "projectId": "fdbc9fca-630f-48f3-a650-67eaf3826dc0"
       }
-    }
+    },
+    "plugins": [
+      ["react-native-appsflyer", {}],
+      [
+        "expo-tracking-transparency",
+        {
+          "userTrackingPermission": "Allowing app tracking will improve the customization of ads"
+        }
+      ]
+    ]
   }
 }
