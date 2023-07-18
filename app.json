@@ -3,7 +3,7 @@
     "userInterfaceStyle": "automatic",
     "name": "Inex",
     "slug": "inex-expenses",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "icon": "./assets/icon.png",
     "backgroundColor": "#FFFFFF",
     "updates": {
@@ -12,7 +12,7 @@
     "assetBundlePatterns": ["**/*"],
     "scheme": "inexbudget",
     "ios": {
-      "buildNumber": "1.1.0",
+      "buildNumber": "1.1.1",
       "supportsTablet": true,
       "bundleIdentifier": "com.sublimeapps.inexexpenses",
       "associatedDomains": ["applinks:inexbudget.onelink.me"],
@@ -20,7 +20,7 @@
         "CFBundleDevelopmentRegion": "en",
         "CFBundleLocalizations": ["en", "fr"],
         "CFBundleDisplayName": "Inex Expenses",
-        "CFBundleShortVersionString": "1.1.0",
+        "CFBundleShortVersionString": "1.1.1",
         "UIBackgroundModes": ["fetch", "remote-notification"],
         "NSAppTransportSecurity": {
           "NSExceptionDomains": {
