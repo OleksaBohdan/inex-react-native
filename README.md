@@ -1,29 +1,33 @@
-## Inex - mobile app for expenses
+# Inex - mobile app for expenses
 
-# v1.1.0
+## 1.1.1
+
+- updated infoPlist
+
+## v1.1.0
 
 - added AppsFlyer
 - added Onelink & AASA
 - bug fixed with date picker
 - added testing events
 
-# v1.0.3
+## v1.0.3
 
 - changed notification button behavior
 - changed category btn style
 
-# v1.0.2
+## v1.0.2
 
 - changed notification text message
 - changed EnterValue buttons
 
-# v1.0.1
+## v1.0.1
 
 - changed notification behavior
 - fixed screens lags
 - increased some buttons tuch area
 
-## Dev Commands
+# Dev Commands
 
 Build broject for App Store:
 eas build --platform ios
@@ -31,15 +35,15 @@ eas build --platform ios
 Start project in simulator:
 npx expo start
 
-## AppsFlyer installations and settings:
+# AppsFlyer installations and settings:
 
-# Install AppsFlyer
+## Install AppsFlyer
 
 npx expo install expo-dev-client
 npx expo install react-native-appsflyer
 npx expo install expo-tracking-transparency
 
-# Add react-native-appsflyer into the plugins array inside the app.json
+## Add react-native-appsflyer into the plugins array inside the app.json
 
 "plugins": [
 [
@@ -47,22 +51,22 @@ npx expo install expo-tracking-transparency
 ]
 ],
 
-# Create build for ios emulator
+## Create build for ios emulator
 
 eas build --profile development-simulator --platform ios
 
-# Move downloaded app to simulator screen
+## Move downloaded app to simulator screen
 
 npx expo start --dev-client
 
-# Implement AppsFlyer setup code
+## Implement AppsFlyer setup code
 
 import appsFlyer from 'react-native-appsflyer';
 ... appsFlyer.initSdk...
 
-## Deep linking
+# Deep linking
 
-# Info:
+## Info:
 
 Helpful links:
 https://engineering.razorpay.com/deep-linking-with-our-react-native-app-9cbee7fdcbd7
@@ -74,7 +78,7 @@ https://www.patterns.dev/posts/provider-pattern
 https://reactnavigation.org/docs/deep-linking/
 for IOS AASA - https://reactnative.dev/docs/linking#enabling-deep-links
 
-# Setup Onelink in Appsflyer account
+## Setup Onelink in Appsflyer account
 
 Add to Onelink:
 Team ID: https://developer.apple.com/account #membership
@@ -84,21 +88,21 @@ BundleId: https://developer.apple.com/account/resources/identifiers/bundleId/
 
 Validate AASA: https://branch.io/resources/aasa-validator/
 
-# Add Onelink settings to app.json file
+## Add Onelink settings to app.json file
 
 ios: {
 ...,
 "associatedDomains": ["applinks:inexbudget.onelink.me"]
 }
 
-# Install module react-native-branch
+## Install module react-native-branch
 
 npx expo install react-native-branch @config-plugins/react-native-branch
 
-# Handle deep-linking
+## Handle deep-linking
 
 ...
 
-# Testing
+## Testing
 
 ...

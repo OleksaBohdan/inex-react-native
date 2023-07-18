@@ -24,10 +24,6 @@ export default function App() {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
-    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
-  }, []);
-
-  useEffect(() => {
     (async () => {
       if (Platform.OS === 'ios') {
         try {
@@ -40,6 +36,10 @@ export default function App() {
         }
       }
     })();
+  }, []);
+
+  useEffect(() => {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
   }, []);
 
   const url = Linking.useURL();
